@@ -1,0 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Playfair Display", Georgia, 'Liberation Serif', serif;
+}
+
+.menu_main ul {
+  display: flex;
+  width: 100%;
+  list-style: none;
+}
+
+
+.firenze {
+    background-image: var(--firenze-background-img);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-blend-mode: multiply;
+}
+
+.roma {
+    background-image: var(--roma-background-img);
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: multiply;
+}
+
+.menu_main-item {
+    flex: 1;
+    height: 100vh;
+}
+
+.menu_main-button {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-size: cover;
+    border: 0;
+    position: relative;
+    font-size: 100px;
+    color: #FFF4E8;
+}
+
+.menu_main-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  pointer-events: none;
+}
+
+.menu_main:hover .menu_main-button::after {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.menu_main:hover .menu_main-button:hover::after {
+  background-color: transparent;
+}
