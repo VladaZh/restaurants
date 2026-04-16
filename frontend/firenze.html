@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./fonts/fonts.css">
+    <link rel="stylesheet" href="./styles/variables.css">
+    <link rel="stylesheet" href="./styles/style.css">
+    <title>Firenze</title>
+    <script src="./scripts/script.js"></script>
+    
+  </head>
+  <body class="page">
+    <main class="content">
+        <section class="main-section">
+            <nav>
+                <ul class="menu">
+                    <div class="left-group">
+                        <li class="menu-item">
+                            <button
+                            class="menu_button about"
+                            >
+                            о нас
+                            </button>
+                        </li>
+                        <li class="menu-item">
+                            <button
+                            class="menu_button contacts"
+                            >
+                            контакты
+                            </button>
+                        </li>
+                    </div>
+                    <li class="menu-item">
+                        <button
+                        class="reserve-button reserve menu_button"
+                        >
+                        забронировать столик
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <h1>Firenze</h1>
+        </section>
+        <section class="about-section">
+            <h2>Firenze</h2>
+            <p class="about-description">это пространство, где рождается дух настоящей Италии.
+                 Вдохновлённый культурой и кулинарными традициями Флоренции, наш ресторан предлагает
+                  авторскую интерпретацию классической тосканской кухни. Мы работаем только с сезонными
+                   продуктами, фермерскими сырами, оливковым маслом холодного отжима и винами из лучших 
+                   виноградников Апеннин. Приглушённый свет, натуральный мрамор, дерево и живая итальянская
+                    музыка создают атмосферу тёплой роскоши, в которой время замедляется. Firenze — это не
+                     просто ужин, а гастрономическое путешествие в сердце Италии.</p>
+            <div class="photo photo-left"></div>
+            <div class="photo photo-center"></div>
+            <div class="photo photo-right"></div>
+        </section>
+        <section class="form-section">
+            <h2>Забронировать столик</h2>
+            <form>
+                <input
+                    type="text"
+                    name="user-name"
+                    id="user-name"
+                    class="form_input form_input-name"
+                    placeholder="Имя"
+                    required
+                    minlength="2"
+                    maxlength="40"
+                    pattern="^[a-zA-Zа-яА-ЯёЁ\s-]+$"
+                    data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
+                <input
+                    type="tel"
+                    name="user-phone"
+                    id="user-phone"
+                    class="form_input form_input-phone"
+                    placeholder="Телефон"
+                    required
+                    minlength="5"
+                    maxlength="20"
+                    pattern="^[\+\d][\d\(\)\-\s]{5,20}$"
+                    inputmode="numeric"
+                    data-error-message="Введите корректный номер телефона">
+                <input
+                    type="email"
+                    name="user-email"
+                    id="user-email"
+                    class="form_input form_input-email"
+                    placeholder="Email"
+                    required
+                    minlength="2"
+                    maxlength="100"
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    inputmode="email"
+                    data-error-message="Введите корректный email адрес">
+                <input
+                    type="date"
+                    name="user-date"
+                    id="user-date"
+                    class="form_input form_input-date"
+                    required
+                    min="1900-01-01"
+                    max="2026-12-31"
+                    data-error-message="Введите корректную дату">
+                <input
+                    type="number"
+                    name="guests"
+                    id="guests"
+                    class="form_input form_input-guests"
+                    placeholder="Количество гостей"
+                    required
+                    min="1"
+                    max="10"
+                    step="1"
+                    value="2"
+                    data-error-message="Укажите количество гостей от 1 до 10">
+                <button
+                    type="submit"
+                    class="reserve-button form-button"
+                    disabled
+                    >
+                    Забронировать столик
+                </button>
+            </form>
+        </section>
+    </main>
+    <footer class="footer">
+        <h2>Контакты</h2>
+        <span class="contacts">Телефон: +7 912 345 67 89</span>
+        <span class="contacts">Адрес: г. Москва, ул. Остоженка, 23</span>
+    </footer>
+  </body>
+</html>
