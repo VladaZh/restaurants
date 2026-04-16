@@ -10,5 +10,8 @@
   --firenze-about-photo-left: url("../images/firenze_photo_left.jpg");
   --firenze-about-photo-center: url("../images/firenze_photo_center.jpeg");
   --firenze-about-photo-right: url("../images/firenze_photo_right.jpg");
+  --roma-about-photo-left: url("../images/roma_photo_left.jpg");
+  --roma-about-photo-center: url("../images/roma_photo_center.jpg");
+  --roma-about-photo-right: url("../images/roma_photo_right.jpg");
   --form-section-bg: url("../images/form_section_bg.jpg");
 }

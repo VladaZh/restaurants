@@ -203,6 +203,22 @@ h4 {
     background-image: var(--firenze-about-photo-right);
 }
 
+.photo-left-roma {
+    background-image: var(--roma-about-photo-left);
+}
+
+.photo-center-roma {
+    background-image: var(--roma-about-photo-center);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-blend-mode: multiply;
+}
+
+.photo-right-roma {
+    background-image: var(--roma-about-photo-right);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-blend-mode: multiply;
+}
+
 .form-section {
     background-image: var(--form-section-bg);
     height: 110vh;
@@ -260,4 +276,13 @@ h4 {
 
 .contacts-footer {
     margin-top: 10px;
+}
+
+.main-roma {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2)), var(--roma-background-img);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    position: relative;
 }

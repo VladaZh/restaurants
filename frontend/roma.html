@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./fonts/fonts.css">
+    <link rel="stylesheet" href="./styles/variables.css">
+    <link rel="stylesheet" href="./styles/style.css">
+    <title>Roma</title>
+    <script src="./scripts/script.js"></script>
+    
+  </head>
+  <body class="page">
+    <main class="content">
+        <section class="main-section main-roma">
+            <nav>
+                <ul class="menu">
+                    <div class="left-group">
+                        <li class="menu-item">
+                            <a href="#about-section"
+                                class="menu_button about"
+                                >
+                                о нас
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#contacts"
+                                class="menu_button contacts"
+                                >
+                                контакты
+                            </a>
+                        </li>
+                    </div>
+                    <li class="menu-item">
+                        <a href="#form"
+                            class="reserve-button reserve menu_button"
+                            >
+                            забронировать столик
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <h1>Roma</h1>
+        </section>
+        <section class="about-section" id="about-section">
+            <h2>Roma</h2>
+            <p class="about-description">Добро пожаловать в Roma — уютное место, где классическая итальянская
+                 кухня встречается с простой и тёплой атмосферой. Красные клетчатые скатерти, аромат
+                 свежеиспечённого теста и непринуждённый гул голосов создают ощущение настоящей римской траттории.
+                Мы делаем ставку на проверенную классику: пицца с тонким хрустящим тестом и щедрыми начинками, паста
+                 al dente с домашними соусами, брускетты и сезонные салаты по традиционным рецептам. Никаких сложных
+                  названий и накруток — только честные ингредиенты, отточенные техники и порции, которых хватает,
+                   чтобы вернуться снова.</p>
+            <section class="container-photo">
+                <div class="photo photo-left-roma"></div>
+                <div class="photo photo-center-roma"></div>
+                <div class="photo photo-right-roma"></div>
+            </section>
+        </section>
+        <section class="form-section" id="form">
+            <h3>Забронировать столик</h3>
+            <form class="reserve-form">
+                <input
+                    type="text"
+                    name="user-name"
+                    id="user-name"
+                    class="form_input form_input-name"
+                    placeholder="Имя"
+                    required
+                    minlength="2"
+                    maxlength="40"
+                    pattern="^[a-zA-Zа-яА-ЯёЁ\s-]+$"
+                    data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
+                <input
+                    type="tel"
+                    name="user-phone"
+                    id="user-phone"
+                    class="form_input form_input-phone"
+                    placeholder="Телефон"
+                    required
+                    minlength="5"
+                    maxlength="20"
+                    pattern="^[\+\d][\d\(\)\-\s]{5,20}$"
+                    inputmode="numeric"
+                    data-error-message="Введите корректный номер телефона">
+                <input
+                    type="email"
+                    name="user-email"
+                    id="user-email"
+                    class="form_input form_input-email"
+                    placeholder="Email"
+                    required
+                    minlength="2"
+                    maxlength="100"
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    inputmode="email"
+                    data-error-message="Введите корректный email адрес">
+                <input
+                    type="datetime-local"
+                    name="user-datetime"
+                    id="user-datetime"
+                    class="form_input form_input-datetime"
+                    placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
+                    value=""
+                    required
+                    autocomplete="off"
+                    min="1900-01-01T00:00"
+                    max="2026-12-31T23:59"
+                    step="900"
+                    data-error-message="Введите корректную дату и время">
+                <input
+                    type="number"
+                    name="guests"
+                    id="guests"
+                    class="form_input form_input-guests"
+                    placeholder="Количество гостей"
+                    required
+                    min="1"
+                    max="10"
+                    step="1"
+                    data-error-message="Укажите количество гостей от 1 до 10">
+                <button
+                    type="submit"
+                    class="reserve-button form-button"
+                    disabled
+                    >
+                    забронировать столик
+                </button>
+            </form>
+        </section>
+    </main>
+    <footer class="footer" id="contacts">
+        <h4>Контакты</h4>
+        <div class="container-contacts">
+            <span class="contacts-footer">Телефон: +7 912 345 67 99</span>
+            <span class="contacts-footer">Адрес: г. Москва, ул. Покровка, 24</span>
+        </div>
+    </footer>
+  </body>
+</html>
