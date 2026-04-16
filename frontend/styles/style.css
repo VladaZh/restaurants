@@ -1,3 +1,12 @@
+html {
+    scroll-behavior: smooth;
+}
+
+a {
+    border: none;
+    text-decoration: none;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,12 +16,32 @@
 
 h1 {
     position: absolute;
-    color: #FFF4E8;
+    color: var(--font-color);
     font-size: 150px;
-    text-shadow: 2px 2px 0 #FFF4E8;
+    font-weight: bold;
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
+}
+
+h2 {
+    color: var(--font-color);
+    padding-top: 90px;
+    font-size: 50px;
+    text-align: center;
+}
+
+h3 {
+    color: var(--font-color);
+    padding-top: 90px;
+    font-size: 50px;
+    text-align: center;
+}
+
+h4 {
+    padding-top: 60px;
+    font-size: 40px;
+    text-align: center;
 }
 
 .menu_main ul {
@@ -47,7 +76,7 @@ h1 {
     border: 0;
     position: relative;
     font-size: 100px;
-    color: #FFF4E8;
+    color: var(--font-color);
 }
 
 .menu_main-button::after {
@@ -101,15 +130,134 @@ h1 {
     font-size: 23px;
     background-color: transparent;
     border: 0;
-    color: #FFF4E8;
+    color: var(--font-color);
+}
+
+.menu_button:hover {
+    border-bottom: 1px solid var(--font-color);
 }
 
 .reserve-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     min-width: 350px;
     min-height: 60px;
-    border: 1px solid #FFF4E8;
+    border: 1px solid var(--font-color);
+}
+
+.reserve-button:hover {
+    background-color: var(--button-hover-color);
+}
+
+.reserve-button:active {
+    background-color: var(--button-active-color);
 }
 
 .contacts {
     margin-left: 60px;
+}
+
+.about-section {
+    background-color: var(--background-color);
+    height: 100vh;
+}
+
+.about-description {
+    color: var(--font-color);
+    font-size: 18px;
+    padding-top: 20px;
+    padding-left: 35px;
+    padding-right: 35px;
+    text-align: center;
+    line-height: 28px;
+}
+
+.container-photo {
+    padding-top: 45px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.photo {
+    height: 400px;
+    width: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.photo-left {
+    background-image: var(--firenze-about-photo-left);
+}
+
+.photo-center {
+    background-image: var(--firenze-about-photo-center);
+}
+
+.photo-right {
+    background-image: var(--firenze-about-photo-right);
+}
+
+.form-section {
+    background-image: var(--form-section-bg);
+    height: 110vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.7);
+    background-blend-mode: multiply;
+}
+
+.reserve-form {
+    background-color: var(--reserve-form-bg);
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    margin: 30px 225px;
+}
+
+.form_input {
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--font-color);
+    height: 80px;
+    font-size: 25px;
+    padding-left: 20px;
+    color: var(--font-color);
+}
+
+.form-button {
+    margin: 50px 30px 40px 30px;
+    background-color: transparent;
+    color: var(--font-color);
+    font-size: 23px;
+}
+
+.default-value {
+    color: var(--placeholder-color);
+}
+
+.footer {
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+.container-contacts {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 60px;
+}
+
+.contacts-footer {
+    margin-top: 10px;
 }

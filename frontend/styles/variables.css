@@ -1,4 +1,14 @@
 :root {
   --firenze-background-img: url("../images/firenze_bg.jpg");
   --roma-background-img: url("../images/roma_bg.jpg");
+  --font-color: #FFF4E8;
+  --placeholder-color: #fff4e8b3;
+  --button-hover-color: #fff4e85b;
+  --button-active-color: #fff4e894;
+  --background-color: #241201;
+  --reserve-form-bg: rgb(36, 18, 1, 0.7);
+  --firenze-about-photo-left: url("../images/firenze_photo_left.jpg");
+  --firenze-about-photo-center: url("../images/firenze_photo_center.jpeg");
+  --firenze-about-photo-right: url("../images/firenze_photo_right.jpg");
+  --form-section-bg: url("../images/form_section_bg.jpg");
 }

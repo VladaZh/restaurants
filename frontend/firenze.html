@@ -20,32 +20,32 @@
                 <ul class="menu">
                     <div class="left-group">
                         <li class="menu-item">
-                            <button
-                            class="menu_button about"
-                            >
-                            о нас
-                            </button>
+                            <a href="#about-section"
+                                class="menu_button about"
+                                >
+                                о нас
+                            </a>
                         </li>
                         <li class="menu-item">
-                            <button
-                            class="menu_button contacts"
-                            >
-                            контакты
-                            </button>
+                            <a href="#contacts"
+                                class="menu_button contacts"
+                                >
+                                контакты
+                            </a>
                         </li>
                     </div>
                     <li class="menu-item">
-                        <button
-                        class="reserve-button reserve menu_button"
-                        >
-                        забронировать столик
-                        </button>
+                        <a href="#form"
+                            class="reserve-button reserve menu_button"
+                            >
+                            забронировать столик
+                        </a>
                     </li>
                 </ul>
             </nav>
             <h1>Firenze</h1>
         </section>
-        <section class="about-section">
+        <section class="about-section" id="about-section">
             <h2>Firenze</h2>
             <p class="about-description">это пространство, где рождается дух настоящей Италии.
                  Вдохновлённый культурой и кулинарными традициями Флоренции, наш ресторан предлагает
@@ -54,13 +54,15 @@
                    виноградников Апеннин. Приглушённый свет, натуральный мрамор, дерево и живая итальянская
                     музыка создают атмосферу тёплой роскоши, в которой время замедляется. Firenze — это не
                      просто ужин, а гастрономическое путешествие в сердце Италии.</p>
-            <div class="photo photo-left"></div>
-            <div class="photo photo-center"></div>
-            <div class="photo photo-right"></div>
+            <section class="container-photo">
+                <div class="photo photo-left"></div>
+                <div class="photo photo-center"></div>
+                <div class="photo photo-right"></div>
+            </section>
         </section>
-        <section class="form-section">
-            <h2>Забронировать столик</h2>
-            <form>
+        <section class="form-section" id="form">
+            <h3>Забронировать столик</h3>
+            <form class="reserve-form">
                 <input
                     type="text"
                     name="user-name"
@@ -97,14 +99,18 @@
                     inputmode="email"
                     data-error-message="Введите корректный email адрес">
                 <input
-                    type="date"
-                    name="user-date"
-                    id="user-date"
-                    class="form_input form_input-date"
+                    type="datetime-local"
+                    name="user-datetime"
+                    id="user-datetime"
+                    class="form_input form_input-datetime"
+                    placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
+                    value=""
                     required
-                    min="1900-01-01"
-                    max="2026-12-31"
-                    data-error-message="Введите корректную дату">
+                    autocomplete="off"
+                    min="1900-01-01T00:00"
+                    max="2026-12-31T23:59"
+                    step="900"
+                    data-error-message="Введите корректную дату и время">
                 <input
                     type="number"
                     name="guests"
@@ -115,22 +121,23 @@
                     min="1"
                     max="10"
                     step="1"
-                    value="2"
                     data-error-message="Укажите количество гостей от 1 до 10">
                 <button
                     type="submit"
                     class="reserve-button form-button"
                     disabled
                     >
-                    Забронировать столик
+                    забронировать столик
                 </button>
             </form>
         </section>
     </main>
-    <footer class="footer">
-        <h2>Контакты</h2>
-        <span class="contacts">Телефон: +7 912 345 67 89</span>
-        <span class="contacts">Адрес: г. Москва, ул. Остоженка, 23</span>
+    <footer class="footer" id="contacts">
+        <h4>Контакты</h4>
+        <div class="container-contacts">
+            <span class="contacts-footer">Телефон: +7 912 345 67 89</span>
+            <span class="contacts-footer">Адрес: г. Москва, ул. Остоженка, 23</span>
+        </div>
     </footer>
   </body>
 </html>
