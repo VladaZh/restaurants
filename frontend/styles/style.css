@@ -2,6 +2,11 @@ html {
     scroll-behavior: smooth;
 }
 
+body, .content, main {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 a {
     border: none;
     text-decoration: none;
@@ -127,10 +132,15 @@ h4 {
 }
 
 .menu_button {
+    padding-left: 1vw;
+    padding-right: 1vw;
     font-size: 3vh;
     background-color: transparent;
     border: 0;
     color: var(--font-color);
+    min-width: fit-content;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .menu_button:hover {
@@ -161,7 +171,8 @@ h4 {
 
 .about-section {
     background-color: var(--background-color);
-    height: 100vh;
+    min-height: 100vh;
+    padding-bottom: 5vh;
 }
 
 .about-description {
@@ -180,6 +191,7 @@ h4 {
     justify-content: space-around;
     padding-left: 2vw;
     padding-right: 2vw;
+    gap: 2vw; 
 }
 
 .photo {
@@ -219,6 +231,8 @@ h4 {
 }
 
 .form-section {
+    display: flex;
+    flex-direction: column;
     background-image: var(--form-section-bg);
     height: 110vh;
     background-size: cover;
@@ -229,6 +243,7 @@ h4 {
 }
 
 .reserve-form {
+    flex-grow: 1;
     background-color: var(--reserve-form-bg);
     border: 0.3vh solid black;
     display: flex;
@@ -247,6 +262,10 @@ h4 {
     font-size: 3vh;
     padding-left: 1vw;
     color: var(--font-color);
+}
+
+.form_input::-webkit-calendar-picker-indicator {
+    filter: brightness(0) saturate(100%) invert(89%) sepia(13%) saturate(450%) hue-rotate(330deg) brightness(103%) contrast(95%);
 }
 
 .form-button {
@@ -280,4 +299,138 @@ h4 {
     background-repeat: no-repeat;
     height: 100vh;
     position: relative;
+}
+
+@media (max-width: 768px) {
+  .photo-left,
+  .photo-center,
+  .photo-left-roma,
+  .photo-center-roma {
+    display: none;
+  }
+
+  .photo-right,
+  .photo-right-roma {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .container-photo {
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 10vh;
+  }
+  h2 {
+    font-size: 6vh;
+    padding-top: 5vh;
+  }
+  h3 {
+    font-size: 5vh;
+    padding-top: 6vh;
+  }
+  h4 {
+    font-size: 4vh;
+    padding-top: 4vh;
+  }
+  .menu_button {
+    font-size: 2.5vh;
+  }
+  .reserve-button {
+    min-width: 30vw;
+    min-height: 6vh;
+    font-size: 2.5vh;
+  }
+  .about-description {
+    font-size: 2vh;
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+  .form_input {
+    height: 8vh;
+    font-size: 2.5vh;
+  }
+  .form-button {
+    font-size: 2vh;
+  }
+  .menu_main-button {
+    font-size: 8vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu {
+    padding-top: 7vh;
+  }
+
+  .photo-right,
+  .photo-right-roma {
+    width: 80vw;
+    height: 80vw;
+  }
+
+  h1 {
+    font-size: 8vh;
+  }
+  h2 {
+    font-size: 5vh;
+  }
+  h3 {
+    font-size: 4vh;
+  }
+  h4 {
+    font-size: 3.5vh;
+  }
+  .menu_button {
+    font-size: 2vh;
+  }
+  .reserve-button {
+    min-width: 40vw;
+    font-size: 2vh;
+  }
+  .about-description {
+    font-size: 1.8vh;
+  }
+  .form_input {
+    font-size: 2vh;
+    height: 7vh;
+  }
+  .menu_main-button {
+    font-size: 6vh;
+  }
+
+  .form-section {
+    height: 100vh;
+  }
+
+  .reserve-form {
+    margin: 0;
+    margin-top: 4vh;
+    flex-grow: 0;
+    height: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .photo {
+    width: 30vh;
+    height: 30vh;
+  }
+  .container-photo {
+    justify-content: center;
+    gap: 20px;
+  }
+}
+
+@media (orientation: portrait) {
+    .menu_main ul {
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .menu_main-item {
+        flex: 1;
+        height: auto;
+    }
 }
