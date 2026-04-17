@@ -6,11 +6,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./fonts/fonts.css">
     <link rel="stylesheet" href="./styles/variables.css">
     <link rel="stylesheet" href="./styles/style.css">
     <title>Firenze</title>
     <script src="./scripts/script.js"></script>
+    <script src="./scripts/validate.js"></script>
     
   </head>
   <body class="page">
@@ -74,6 +74,8 @@
                     maxlength="40"
                     pattern="^[a-zA-Zа-яА-ЯёЁ\s-]+$"
                     data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
+                <span class="form-error" id="user-name-error"></span>
+
                 <input
                     type="tel"
                     name="user-phone"
@@ -81,11 +83,13 @@
                     class="form_input form_input-phone"
                     placeholder="Телефон"
                     required
-                    minlength="5"
+                    minlength="6"
                     maxlength="20"
-                    pattern="^[\+\d][\d\(\)\-\s]{5,20}$"
-                    inputmode="numeric"
+                    pattern="^[\+\d][\d\s\(\)\-]{4,19}$"
+                    inputmode="tel"
                     data-error-message="Введите корректный номер телефона">
+                <span class="form-error" id="user-phone-error"></span>
+
                 <input
                     type="email"
                     name="user-email"
@@ -98,19 +102,21 @@
                     pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     inputmode="email"
                     data-error-message="Введите корректный email адрес">
+                <span class="form-error" id="user-email-error"></span>
+
                 <input
                     type="datetime-local"
                     name="user-datetime"
                     id="user-datetime"
                     class="form_input form_input-datetime"
-                    placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
-                    value=""
                     required
                     autocomplete="off"
-                    min="1900-01-01T00:00"
+                    min=""
                     max="2026-12-31T23:59"
                     step="900"
                     data-error-message="Введите корректную дату и время">
+                <span class="form-error" id="user-datetime-error"></span>
+
                 <input
                     type="number"
                     name="guests"
@@ -122,13 +128,12 @@
                     max="10"
                     step="1"
                     data-error-message="Укажите количество гостей от 1 до 10">
-                <button
-                    type="submit"
-                    class="reserve-button form-button"
-                    disabled
-                    >
+                <span class="form-error" id="guests-error"></span>
+
+                <button type="submit" class="reserve-button form-button" disabled>
                     забронировать
                 </button>
+                
             </form>
         </section>
     </main>

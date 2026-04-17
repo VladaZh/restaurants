@@ -275,6 +275,38 @@ h4 {
     font-size: 2.5vh;
 }
 
+.form-error {
+  display: none;
+  color: #ff6b6b;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  margin-left: 2vw;
+  min-height: 1.2em;
+  width: calc(100% - 4vw);
+  box-sizing: border-box;
+}
+.form_input--error {
+  border-bottom-color: #ff6b6b !important;
+  animation: shake 0.3s ease-in-out;
+}
+
+.form_input--error:focus {
+  outline: 0.15rem solid #ff6b6b; 
+  outline-offset: 0.15rem;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-0.25rem); }
+  75% { transform: translateX(0.25rem); }
+}
+
+.reserve-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--button-hover-color, rgba(0,0,0,0.1)) !important;
+}
+
 .default-value {
     color: var(--placeholder-color);
 }
