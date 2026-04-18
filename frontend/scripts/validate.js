@@ -13,6 +13,33 @@ function getMinDateTimeString() {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T00:00`;
 }
 
+function loadBookings() {
+  const stored = localStorage.getItem('restaurant_bookings');
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveBookings(bookings) {
+  localStorage.setItem('restaurant_bookings', JSON.stringify(bookings));
+}
+
+function isDuplicateBooking(newBooking, existingBookings) {
+  return existingBookings.some(booking =>
+    booking.name === newBooking.name &&
+    booking.date === newBooking.date &&
+    booking.time === newBooking.time
+  );
+}
+
+function addBooking(booking) {
+  const bookings = loadBookings();
+  if (isDuplicateBooking(booking, bookings)) {
+    return false;
+  }
+  bookings.push(booking);
+  saveBookings(bookings);
+  return true;
+}
+
 function init() {
   const form = document.querySelector('.reserve-form');
   if (!form) return;
@@ -174,6 +201,26 @@ function updateButton(form, button) {
 }
 
 function handleSubmit(form) {
+  const nameInput = document.getElementById('user-name');
+  const phoneInput = document.getElementById('user-phone');
+  const datetimeInput = document.getElementById('user-datetime');
+  const guestsInput = document.getElementById('guests');
+
+  const booking = {
+    name: nameInput.value.trim(),
+    phone: phoneInput.value.trim(),
+    date: datetimeInput.value.split('T')[0],
+    time: datetimeInput.value.split('T')[1],
+    guests: guestsInput.value,
+    createdAt: new Date().toISOString()
+  };
+
+  const added = addBooking(booking);
+  if (!added) {
+    alert('Ошибка: бронь на это имя, дату и время уже существует. Выберите другое время или дату.');
+    return;
+  }
+
   alert('Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.');
 
   form.reset();
