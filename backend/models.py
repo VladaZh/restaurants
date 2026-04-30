@@ -1,10 +1,12 @@
 from datetime import datetime
+from typing import Optional
 
 import phonenumbers
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 
 
 class FormRequest(BaseModel):
+    id: int = Field(ge=0)
     name: str = Field(min_length=2, max_length=40)
     phone_number: str = Field(min_length=6, max_length=20)
     email: EmailStr
@@ -21,3 +23,14 @@ class FormRequest(BaseModel):
         except phonenumbers.NumberParseException:
             ValueError("Phone number is not in international format")
         return value
+
+
+class FormResponse(BaseModel):
+    id: int
+    name: str
+    phone_number: str
+    email: Optional[str] = None
+    reservation_date: datetime
+    number_of_guests: int
+
+    model_config = ConfigDict(from_attributes=True)
