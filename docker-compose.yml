@@ -1,0 +1,39 @@
+services:
+
+  db:
+    image: postgres:16.13-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_URL: ${DB_URL}
+    ports:
+      - "5432:5432"
+    volumes:
+      - restaurants_app_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build: 
+      context: ./frontend
+    ports:
+      - "80:80"
+
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: ${DB_URL}
+
+volumes:
+  restaurants_app_data:

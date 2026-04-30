@@ -6,11 +6,11 @@ from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 
 
 class FormRequest(BaseModel):
-    id: int = Field(ge=0)
+    model_config = ConfigDict(from_attributes=True)
     name: str = Field(min_length=2, max_length=40)
     phone_number: str = Field(min_length=6, max_length=20)
     email: EmailStr
-    date: datetime
+    reservation_date: datetime
     number_of_guests: int = Field(ge=2, le=10)
 
     @field_validator("phone_number")
