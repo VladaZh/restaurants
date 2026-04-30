@@ -33,7 +33,7 @@ class ReservationsRepo:
         self.session.add(new_form)
         self.session.commit()
         self.session.refresh(new_form)
-        return self._model_to_read(new_form)
+        return new_form
 
     def get_by_id(self, id: int) -> Optional[FormRequest]:
         return self._get_by_query(id=id)

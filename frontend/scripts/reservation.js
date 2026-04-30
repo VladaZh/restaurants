@@ -31,28 +31,6 @@ export const toggleButtonLoading = (button, isLoading, originalText, loadingText
   }
 };
 
-export const showFormMessage = (form, message, type = 'info') => {
-  let msgEl = form.querySelector('.form-message');
-  
-  if (!msgEl) {
-    msgEl = document.createElement('div');
-    msgEl.className = 'form-message';
-    msgEl.setAttribute('role', 'alert');
-    msgEl.setAttribute('aria-live', 'polite');
-    form.insertBefore(msgEl, form.firstChild);
-  }
-  
-  msgEl.textContent = message;
-  msgEl.className = `form-message form-message--${type}`;
-  
-  if (type === 'success') {
-    setTimeout(() => {
-      msgEl.textContent = '';
-      msgEl.className = 'form-message';
-    }, 5000);
-  }
-};
-
 export const handleReservationSubmit = (evt, form) => {
   evt.preventDefault();
   
@@ -61,17 +39,12 @@ export const handleReservationSubmit = (evt, form) => {
 
   const originalBtnText = submitBtn.textContent;
   toggleButtonLoading(submitBtn, true, originalBtnText, 'Отправка...');
-  showFormMessage(form, '', 'info');
 
   const payload = collectFormData(form);
 
   sendReservation(payload)
     .then((data) => {
-      showFormMessage(
-        form,
-        `Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.`,
-        'success'
-      );
+      alert('Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.');
       form.reset();
       form.querySelectorAll('input').forEach(input => {
         const errorEl = document.getElementById(`${input.id}-error`);
@@ -87,17 +60,9 @@ export const handleReservationSubmit = (evt, form) => {
       console.error('Reservation error:', error);
       
       if (error.status === 409) {
-        showFormMessage(
-          form,
-          'Ошибка: бронь на это имя, дату и время уже существует. Выберите другое время или дату.',
-          'error'
-        );
+        alert('Ошибка: такая бронь уже существует. Выберите другое время или дату.')
       } else if (error.status === 422) {
-        showFormMessage(
-          form,
-          `${error.detail || 'Ошибка в данных формы'}`,
-          'error'
-        );
+        alert('Ошибка в данных формы');
       } else if (error.name === 'AbortError') {
         alert(`Превышено время ожидания ответа сервера ${error}`)
       } else if (error instanceof TypeError) {

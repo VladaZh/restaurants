@@ -1,3 +1,5 @@
+import { handleReservationSubmit } from "./reservation.js";
+
 const CONFIG = {
   debounceMs: 300,
   errorClass: 'form_input--error',
@@ -11,33 +13,6 @@ function getMinDateTimeString() {
   const now = new Date();
   const pad = n => String(n).padStart(2, '0');
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T00:00`;
-}
-
-function loadBookings() {
-  const stored = localStorage.getItem('restaurant_bookings');
-  return stored ? JSON.parse(stored) : [];
-}
-
-function saveBookings(bookings) {
-  localStorage.setItem('restaurant_bookings', JSON.stringify(bookings));
-}
-
-function isDuplicateBooking(newBooking, existingBookings) {
-  return existingBookings.some(booking =>
-    booking.name === newBooking.name &&
-    booking.date === newBooking.date &&
-    booking.time === newBooking.time
-  );
-}
-
-function addBooking(booking) {
-  const bookings = loadBookings();
-  if (isDuplicateBooking(booking, bookings)) {
-    return false;
-  }
-  bookings.push(booking);
-  saveBookings(bookings);
-  return true;
 }
 
 function init() {
@@ -200,37 +175,28 @@ function updateButton(form, button) {
   button.disabled = !allValid;
 }
 
-function handleSubmit(form) {
-  const nameInput = document.getElementById('user-name');
-  const phoneInput = document.getElementById('user-phone');
-  const datetimeInput = document.getElementById('user-datetime');
-  const guestsInput = document.getElementById('guests');
+async function handleSubmit(form) {
+  const submitBtn = form.querySelector(CONFIG.buttonSelector);
+  const originalText = submitBtn.textContent;
 
-  const booking = {
-    name: nameInput.value.trim(),
-    phone: phoneInput.value.trim(),
-    date: datetimeInput.value.split('T')[0],
-    time: datetimeInput.value.split('T')[1],
-    guests: guestsInput.value,
-    createdAt: new Date().toISOString()
-  };
+  submitBtn.textContent = 'Отправка...';
+  submitBtn.disabled = true;
 
-  const added = addBooking(booking);
-  if (!added) {
-    alert('Ошибка: бронь на это имя, дату и время уже существует. Выберите другое время или дату.');
-    return;
+  try {
+    await handleReservationSubmit({ preventDefault: () => {} }, form);
+    
+    form.reset();
+    form.querySelectorAll('input').forEach(input => {
+      clearError(input);
+      state[input.id] = { valid: false, touched: false };
+    });
+  } catch (error) {
+    console.error('Submit error:', error);
+    alert(`Submit error: ${error}`)
+  } finally {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
   }
-
-  alert('Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.');
-
-  form.reset();
-  form.querySelectorAll('input').forEach(input => {
-    clearError(input);
-    state[input.id] = { valid: false, touched: false };
-  });
-
-  const button = form.querySelector(CONFIG.buttonSelector);
-  updateButton(form, button);
 }
 
 function debounce(fn, delay) {
