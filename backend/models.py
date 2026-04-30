@@ -11,7 +11,7 @@ class FormRequest(BaseModel):
     phone_number: str = Field(min_length=6, max_length=20)
     email: EmailStr
     reservation_date: datetime
-    number_of_guests: int = Field(ge=2, le=10)
+    number_of_guests: int = Field(ge=1, le=10)
 
     @field_validator("phone_number")
     @classmethod

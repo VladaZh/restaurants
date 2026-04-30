@@ -1,19 +1,13 @@
-import { handleReservationSubmit } from "./reservation.js";
+import { handleReservationSubmit, setMinDateTime } from "./reservation.js";
 
 const CONFIG = {
   debounceMs: 300,
   errorClass: 'form_input--error',
   successClass: 'form_input--success',
-  buttonSelector: '.reserve-form button[type="submit"]',
+  buttonSelector: '.form-button',
 };
 
 const state = {};
-
-function getMinDateTimeString() {
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T00:00`;
-}
 
 function init() {
   const form = document.querySelector('.reserve-form');
@@ -26,13 +20,13 @@ function init() {
     state[input.id] = { valid: false, touched: false };
 
     if (input.type === 'datetime-local') {
-      input.min = getMinDateTimeString();
+      setMinDateTime(input); 
       input.step = 60;
     }
 
     input.addEventListener('input', debounce(() => {
       if (input.type === 'datetime-local') {
-        input.min = getMinDateTimeString();
+        setMinDateTime(input); 
       }
       validate(input);
       updateButton(form, submitBtn);
@@ -46,7 +40,7 @@ function init() {
 
     input.addEventListener('focus', () => {
       if (input.type === 'datetime-local') {
-        input.min = getMinDateTimeString();
+        setMinDateTime(input); 
       }
       clearError(input);
     });
@@ -70,7 +64,22 @@ function init() {
     }
   });
 
+  form.addEventListener('reset', () => {
+    inputs.forEach(input => {
+      state[input.id] = { valid: false, touched: false };
+      
+      input.classList.remove(CONFIG.errorClass, CONFIG.successClass);
+      input.setAttribute('aria-invalid', 'false');
+      
+      const errorEl = document.getElementById(`${input.id}-error`);
+      if (errorEl) {
+        errorEl.textContent = '';
+        errorEl.style.display = 'none';
+      }
+    });
+
   updateButton(form, submitBtn);
+  });
 }
 
 function validate(input) {
@@ -157,10 +166,7 @@ function clearError(input) {
     errorEl.style.display = 'none';
   }
   input.classList.remove(CONFIG.errorClass);
-  if (input.value.trim()) {
-    input.classList.add(CONFIG.successClass);
-    state[input.id].valid = true;
-  }
+  input.classList.remove(CONFIG.successClass);
   input.setAttribute('aria-invalid', 'false');
 }
 
@@ -175,28 +181,9 @@ function updateButton(form, button) {
   button.disabled = !allValid;
 }
 
-async function handleSubmit(form) {
-  const submitBtn = form.querySelector(CONFIG.buttonSelector);
-  const originalText = submitBtn.textContent;
-
-  submitBtn.textContent = 'Отправка...';
-  submitBtn.disabled = true;
-
-  try {
-    await handleReservationSubmit({ preventDefault: () => {} }, form);
-    
-    form.reset();
-    form.querySelectorAll('input').forEach(input => {
-      clearError(input);
-      state[input.id] = { valid: false, touched: false };
-    });
-  } catch (error) {
-    console.error('Submit error:', error);
-    alert(`Submit error: ${error}`)
-  } finally {
-    submitBtn.textContent = originalText;
-    submitBtn.disabled = false;
-  }
+function handleSubmit(form) {
+  const fakeEvent = { preventDefault: () => {} };
+  handleReservationSubmit(fakeEvent, form);
 }
 
 function debounce(fn, delay) {

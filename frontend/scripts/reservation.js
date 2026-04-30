@@ -20,15 +20,8 @@ export const collectFormData = (form) => ({
   )
 });
 
-export const toggleButtonLoading = (button, isLoading, originalText, loadingText) => {
-  if (isLoading) {
-    button.dataset.originalText = originalText;
-    button.textContent = loadingText;
-    button.disabled = true;
-  } else {
-    button.textContent = button.dataset.originalText || originalText;
-    button.disabled = false;
-  }
+export const toggleButtonLoading = (button, isLoading) => {
+  button.disabled = isLoading;
 };
 
 export const handleReservationSubmit = (evt, form) => {
@@ -37,8 +30,7 @@ export const handleReservationSubmit = (evt, form) => {
   const submitBtn = form.querySelector('.form-button');
   if (!submitBtn) return;
 
-  const originalBtnText = submitBtn.textContent;
-  toggleButtonLoading(submitBtn, true, originalBtnText, 'Отправка...');
+  toggleButtonLoading(submitBtn, true);
 
   const payload = collectFormData(form);
 
@@ -64,16 +56,14 @@ export const handleReservationSubmit = (evt, form) => {
       } else if (error.status === 422) {
         alert('Ошибка в данных формы');
       } else if (error.name === 'AbortError') {
-        alert(`Превышено время ожидания ответа сервера ${error}`)
+        alert(`Превышено время ожидания ответа сервера`)
       } else if (error instanceof TypeError) {
-        alert(`Не удалось соединиться с сервером ${error}`)
+        alert(`Не удалось соединиться с сервером`)
       } else {
-        alert(`Ошибка ${error}`)
+        alert(`Ошибка`)
       }
+      toggleButtonLoading(submitBtn, false);
     })
-    .finally(() => {
-      toggleButtonLoading(submitBtn, false, originalBtnText, 'Отправка...');
-    });
 };
 
 export const setMinDateTime = (input) => {

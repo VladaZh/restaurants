@@ -28,7 +28,7 @@ class ReservationsRepo:
 
         return FormRequest.model_validate(instance)
 
-    def create(self, data: FormRequest) -> Optional[FormRequest]:
+    def create(self, data: FormRequest) -> Reservation:
         new_form = Reservation(**data.model_dump())
         self.session.add(new_form)
         self.session.commit()

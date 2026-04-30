@@ -17,7 +17,9 @@ router = APIRouter()
     summary="Отправить форму",
     status_code=status.HTTP_201_CREATED,
 )
-def send_form(reservation: FormRequest, db: Session = Depends(get_db)) -> Response | Optional[FormResponse]:
+def send_form(
+    reservation: FormRequest, db: Session = Depends(get_db)
+) -> Response | Optional[FormRequest]:
     repo = ReservationsRepo(db)
 
     if reservation is None:
