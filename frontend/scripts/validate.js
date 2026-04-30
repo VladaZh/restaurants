@@ -1,5 +1,3 @@
-import { handleReservationSubmit } from "./reservation.js";
-
 const CONFIG = {
   debounceMs: 300,
   errorClass: 'form_input--error',
@@ -203,19 +201,36 @@ function updateButton(form, button) {
 }
 
 function handleSubmit(form) {
-  if (typeof handleReservationSubmit === 'function') {
-    const fakeEvent = { preventDefault: () => {} };
-    handleReservationSubmit(fakeEvent, form);
-  } else {
-    alert('Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.');
-    form.reset();
-    form.querySelectorAll('input').forEach(input => {
-      clearError(input);
-      state[input.id] = { valid: false, touched: false };
-    });
-    const button = form.querySelector(CONFIG.buttonSelector);
-    updateButton(form, button);
+  const nameInput = document.getElementById('user-name');
+  const phoneInput = document.getElementById('user-phone');
+  const datetimeInput = document.getElementById('user-datetime');
+  const guestsInput = document.getElementById('guests');
+
+  const booking = {
+    name: nameInput.value.trim(),
+    phone: phoneInput.value.trim(),
+    date: datetimeInput.value.split('T')[0],
+    time: datetimeInput.value.split('T')[1],
+    guests: guestsInput.value,
+    createdAt: new Date().toISOString()
+  };
+
+  const added = addBooking(booking);
+  if (!added) {
+    alert('Ошибка: бронь на это имя, дату и время уже существует. Выберите другое время или дату.');
+    return;
   }
+
+  alert('Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.');
+
+  form.reset();
+  form.querySelectorAll('input').forEach(input => {
+    clearError(input);
+    state[input.id] = { valid: false, touched: false };
+  });
+
+  const button = form.querySelector(CONFIG.buttonSelector);
+  updateButton(form, button);
 }
 
 function debounce(fn, delay) {

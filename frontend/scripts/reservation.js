@@ -99,11 +99,11 @@ export const handleReservationSubmit = (evt, form) => {
           'error'
         );
       } else if (error.name === 'AbortError') {
-        showFormMessage(form, 'Превышено время ожидания ответа сервера', 'error');
+        alert(`Превышено время ожидания ответа сервера ${error}`)
       } else if (error instanceof TypeError) {
-        showFormMessage(form, 'Не удалось соединиться с сервером', 'error');
+        alert(`Не удалось соединиться с сервером ${error}`)
       } else {
-        showFormMessage(form, `${error.detail || 'Произошла ошибка'}`, 'error');
+        alert(`Ошибка ${error}`)
       }
     })
     .finally(() => {
