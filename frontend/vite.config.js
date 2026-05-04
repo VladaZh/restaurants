@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  base: '/restaurants/',
+  base: process.env.CI_GITHUB_ACTIONS ? '/restaurants/' : '/',
   build: {
     rollupOptions: {
       input: {
