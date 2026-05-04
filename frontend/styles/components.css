@@ -1,71 +1,7 @@
-html {
-    scroll-behavior: smooth;
-}
-
-body, .content, main {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-a {
-    border: none;
-    text-decoration: none;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Playfair Display", Georgia, 'Liberation Serif', serif;
-}
-
-h1 {
-    position: absolute;
-    color: var(--font-color);
-    font-size: 15vh;
-    font-weight: bold;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-}
-
-h2 {
-    color: var(--font-color);
-    padding-top: 8vh;
-    font-size: 8vh;
-    text-align: center;
-}
-
-h3 {
-    color: var(--font-color);
-    padding-top: 10vh;
-    font-size: 6vh;
-    text-align: center;
-}
-
-h4 {
-    padding-top: 6vh;
-    font-size: 5vh;
-    text-align: center;
-}
-
 .menu_main ul {
   display: flex;
   width: 100%;
   list-style: none;
-}
-
-
-.firenze {
-    background-image: var(--firenze-background-img);
-    background-color: rgba(0, 0, 0, 0.3);
-    background-blend-mode: multiply;
-}
-
-.roma {
-    background-image: var(--roma-background-img);
-    background-color: rgba(0, 0, 0, 0.5);
-    background-blend-mode: multiply;
 }
 
 .menu_main-item {
@@ -102,15 +38,6 @@ h4 {
 
 .menu_main:hover .menu_main-button:hover::after {
   background-color: transparent;
-}
-
-.main-section {
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.05)), var(--firenze-background-img);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    position: relative;
 }
 
 .menu {
@@ -165,14 +92,20 @@ h4 {
     background-color: var(--button-active-color);
 }
 
-.contacts {
-    margin-left: 6vw;
+.firenze {
+    background-image: var(--firenze-background-img);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-blend-mode: multiply;
 }
 
-.about-section {
-    background-color: var(--background-color);
-    min-height: 100vh;
-    padding-bottom: 5vh;
+.roma {
+    background-image: var(--roma-background-img);
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: multiply;
+}
+
+.contacts {
+    margin-left: 6vw;
 }
 
 .about-description {
@@ -227,19 +160,6 @@ h4 {
 .photo-right-roma {
     background-image: var(--roma-about-photo-right);
     background-color: rgba(0, 0, 0, 0.3);
-    background-blend-mode: multiply;
-}
-
-.form-section {
-    display: flex;
-    flex-direction: column;
-    background-image: var(--form-section-bg);
-    min-height: 110vh;
-    height: min-content;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: rgba(0, 0, 0, 0.7);
     background-blend-mode: multiply;
 }
 
@@ -312,158 +232,10 @@ h4 {
     color: var(--placeholder-color);
 }
 
-.footer {
-    background-color: var(--background-color);
-    color: var(--font-color);
-}
-
 .container-contacts {
     display: flex;
     flex-direction: column;
     text-align: center;
     margin-top: 1vh;
     padding-bottom: 4vh;
-}
-
-.main-roma {
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2)), var(--roma-background-img);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    position: relative;
-}
-
-@media (max-width: 768px) {
-  .photo-left,
-  .photo-center,
-  .photo-left-roma,
-  .photo-center-roma {
-    display: none;
-  }
-
-  .photo-right,
-  .photo-right-roma {
-    display: block;
-    margin: 0 auto;
-  }
-
-  .container-photo {
-    justify-content: center;
-  }
-
-  h1 {
-    font-size: 10vh;
-  }
-  h2 {
-    font-size: 6vh;
-    padding-top: 5vh;
-  }
-  h3 {
-    font-size: 5vh;
-    padding-top: 6vh;
-  }
-  h4 {
-    font-size: 4vh;
-    padding-top: 4vh;
-  }
-  .menu_button {
-    font-size: 2.5vh;
-  }
-  .reserve-button {
-    min-width: 30vw;
-    min-height: 6vh;
-    font-size: 2.5vh;
-  }
-  .about-description {
-    font-size: 2vh;
-    padding-left: 2vw;
-    padding-right: 2vw;
-  }
-  .form_input {
-    height: 8vh;
-    font-size: 2.5vh;
-  }
-  .form-button {
-    font-size: 2vh;
-  }
-  .menu_main-button {
-    font-size: 8vh;
-  }
-}
-
-@media (max-width: 480px) {
-  .menu {
-    padding-top: 7vh;
-  }
-
-  .photo-right,
-  .photo-right-roma {
-    width: 80vw;
-    height: 80vw;
-  }
-
-  h1 {
-    font-size: 8vh;
-  }
-  h2 {
-    font-size: 5vh;
-  }
-  h3 {
-    font-size: 4vh;
-  }
-  h4 {
-    font-size: 3.5vh;
-  }
-  .menu_button {
-    font-size: 2vh;
-  }
-  .reserve-button {
-    min-width: 40vw;
-    font-size: 2vh;
-  }
-  .about-description {
-    font-size: 1.8vh;
-  }
-  .form_input {
-    font-size: 2vh;
-    height: 7vh;
-  }
-  .menu_main-button {
-    font-size: 6vh;
-  }
-
-  .form-section {
-    height: 100vh;
-  }
-
-  .reserve-form {
-    margin: 0;
-    margin-top: 4vh;
-    flex-grow: 0;
-    height: auto;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  .photo {
-    width: 30vh;
-    height: 30vh;
-  }
-  .container-photo {
-    justify-content: center;
-    gap: 20px;
-  }
-}
-
-@media (orientation: portrait) {
-    .menu_main ul {
-        flex-direction: column;
-        height: 100vh;
-    }
-
-    .menu_main-item {
-        flex: 1;
-        height: auto;
-    }
 }

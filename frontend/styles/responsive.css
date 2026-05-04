@@ -1,0 +1,133 @@
+@media (max-width: 768px) {
+  .photo-left,
+  .photo-center,
+  .photo-left-roma,
+  .photo-center-roma {
+    display: none;
+  }
+
+  .photo-right,
+  .photo-right-roma {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .container-photo {
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 10vh;
+  }
+  h2 {
+    font-size: 6vh;
+    padding-top: 5vh;
+  }
+  h3 {
+    font-size: 5vh;
+    padding-top: 6vh;
+  }
+  h4 {
+    font-size: 4vh;
+    padding-top: 4vh;
+  }
+  .menu_button {
+    font-size: 2.5vh;
+  }
+  .reserve-button {
+    min-width: 30vw;
+    min-height: 6vh;
+    font-size: 2.5vh;
+  }
+  .about-description {
+    font-size: 2vh;
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+  .form_input {
+    height: 8vh;
+    font-size: 2.5vh;
+  }
+  .form-button {
+    font-size: 2vh;
+  }
+  .menu_main-button {
+    font-size: 8vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu {
+    padding-top: 7vh;
+  }
+
+  .photo-right,
+  .photo-right-roma {
+    width: 80vw;
+    height: 80vw;
+  }
+
+  h1 {
+    font-size: 8vh;
+  }
+  h2 {
+    font-size: 5vh;
+  }
+  h3 {
+    font-size: 4vh;
+  }
+  h4 {
+    font-size: 3.5vh;
+  }
+  .menu_button {
+    font-size: 2vh;
+  }
+  .reserve-button {
+    min-width: 40vw;
+    font-size: 2vh;
+  }
+  .about-description {
+    font-size: 1.8vh;
+  }
+  .form_input {
+    font-size: 2vh;
+    height: 7vh;
+  }
+  .menu_main-button {
+    font-size: 6vh;
+  }
+
+  .form-section {
+    height: 100vh;
+  }
+
+  .reserve-form {
+    margin: 0;
+    margin-top: 4vh;
+    flex-grow: 0;
+    height: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .photo {
+    width: 30vh;
+    height: 30vh;
+  }
+  .container-photo {
+    justify-content: center;
+    gap: 20px;
+  }
+}
+
+@media (orientation: portrait) {
+    .menu_main ul {
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .menu_main-item {
+        flex: 1;
+        height: auto;
+    }
+}
