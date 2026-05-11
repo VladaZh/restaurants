@@ -5,19 +5,19 @@
 }
 
 .menu_main-item {
-    flex: 1;
-    height: 100vh;
+  flex: 1;
+  height: 100vh;
 }
 
 .menu_main-button {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    background-size: cover;
-    border: 0;
-    position: relative;
-    font-size: 12vh;
-    color: var(--font-color);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-size: cover;
+  border: 0;
+  position: relative;
+  font-size: 12vh;
+  color: var(--font-color);
 }
 
 .menu_main-button::after {
@@ -41,171 +41,238 @@
 }
 
 .menu {
-    width: 90vw;
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    justify-content: space-between;
-    padding-top: 10vh;
-    margin-left: 5vw;
-    margin-right: 5vw;
+  width: 90vw;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  justify-content: space-between;
+  padding-top: 10vh;
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 
 .left-group {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content:flex-start;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content:flex-start;
 }
 
 .menu_button {
-    padding-left: 1vw;
-    padding-right: 1vw;
-    font-size: 3vh;
-    background-color: transparent;
-    border: 0;
-    color: var(--font-color);
-    min-width: fit-content;
-    flex-shrink: 0;
-    white-space: nowrap;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  font-size: 3vh;
+  background-color: transparent;
+  border: 0;
+  color: var(--font-color);
+  min-width: fit-content;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .menu_button:hover {
-    border-bottom: 0.05vh solid var(--font-color);
+  border-bottom: 0.05vh solid var(--font-color);
 }
 
 .reserve-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-width: 25vw;
-    min-height: 7vh;
-    border: 1px solid var(--font-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 25vw;
+  min-height: 7vh;
+  border: 1px solid var(--font-color);
 }
 
 .reserve-button:hover {
-    background-color: var(--button-hover-color);
+  background-color: var(--button-hover-color);
 }
 
 .reserve-button:active {
-    background-color: var(--button-active-color);
+  background-color: var(--button-active-color);
 }
 
 .firenze {
-    background-image: var(--firenze-background-img);
-    background-color: rgba(0, 0, 0, 0.3);
-    background-blend-mode: multiply;
+  background-image: var(--firenze-background-img);
+  background-color: rgba(0, 0, 0, 0.3);
+  background-blend-mode: multiply;
 }
 
 .roma {
-    background-image: var(--roma-background-img);
-    background-color: rgba(0, 0, 0, 0.5);
-    background-blend-mode: multiply;
+  background-image: var(--roma-background-img);
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: multiply;
 }
 
 .contacts {
-    margin-left: 6vw;
+  margin-left: 6vw;
 }
 
 .about-description {
-    color: var(--font-color);
-    font-size: 2.5vh;
-    padding-top: 2vh;
-    padding-left: 4vw;
-    padding-right: 4vw;
-    text-align: center;
+  color: var(--font-color);
+  font-size: 2.5vh;
+  padding-top: 2vh;
+  padding-left: 4vw;
+  padding-right: 4vw;
+  text-align: center;
 }
 
 .container-photo {
-    padding-top: 8vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding-left: 2vw;
-    padding-right: 2vw;
-    gap: 2vw; 
+  padding-top: 8vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  gap: 2vw; 
 }
 
 .photo {
-    height: 45vh;
-    width: 45vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  height: 45vh;
+  width: 45vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .photo-left {
-    background-image: var(--firenze-about-photo-left);
+  background-image: var(--firenze-about-photo-left);
 }
 
 .photo-center {
-    background-image: var(--firenze-about-photo-center);
+  background-image: var(--firenze-about-photo-center);
 }
 
 .photo-right {
-    background-image: var(--firenze-about-photo-right);
+  background-image: var(--firenze-about-photo-right);
 }
 
 .photo-left-roma {
-    background-image: var(--roma-about-photo-left);
+  background-image: var(--roma-about-photo-left);
 }
 
 .photo-center-roma {
-    background-image: var(--roma-about-photo-center);
-    background-color: rgba(0, 0, 0, 0.3);
-    background-blend-mode: multiply;
+  background-image: var(--roma-about-photo-center);
+  background-color: rgba(0, 0, 0, 0.3);
+  background-blend-mode: multiply;
 }
 
 .photo-right-roma {
-    background-image: var(--roma-about-photo-right);
-    background-color: rgba(0, 0, 0, 0.3);
-    background-blend-mode: multiply;
+  background-image: var(--roma-about-photo-right);
+  background-color: rgba(0, 0, 0, 0.3);
+  background-blend-mode: multiply;
+}
+
+.city-info-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 2vw;
+}
+
+.dishes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 2rem auto;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.dish-card {
+  background: var(--reserve-form-bg);
+  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s ease;
+  border: 1px solid rgba(0,0,0,0.1);
+  height: auto;
+  aspect-ratio: 4 / 3; 
+}
+
+.dish-card img {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease;
+}
+
+.dish-card h4 {
+  height: 30%;
+  font-size: 1.2rem;
+  padding: 0.8rem;
+  text-align: center;
+  color: var(--font-color);
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.loading-text, .error-text {
+  text-align: center;
+  font-size: 2.5vh;
+  padding: 2rem;
+  color: var(--font-color);
+  opacity: 0.7;
+}
+
+.error-text {
+  color: #ff6b6b;
 }
 
 .reserve-form {
-    flex-grow: 1;
-    background-color: var(--reserve-form-bg);
-    border: 0.3vh solid black;
-    display: flex;
-    flex-direction: column;
-    margin: 7vh 20vw;
+  flex-grow: 1;
+  background-color: var(--reserve-form-bg);
+  border: 0.3vh solid black;
+  display: flex;
+  flex-direction: column;
+  margin: 7vh 20vw;
 }
 
 .form_input {
-    margin-top: 2vh;
-    margin-left: 2vw;
-    margin-right: 2vw;
-    background-color: transparent;
-    border: none;
-    border-bottom: 0.07vh solid var(--font-color);
-    height: 10vh;
-    font-size: 3vh;
-    padding-left: 1vw;
-    color: var(--font-color);
+  margin-top: 2vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+  background-color: transparent;
+  border: none;
+  border-bottom: 0.07vh solid var(--font-color);
+  height: 10vh;
+  font-size: 3vh;
+  padding-left: 1vw;
+  color: var(--font-color);
 }
 
 .form_input::-webkit-calendar-picker-indicator {
-    filter: brightness(0) saturate(100%) invert(89%) sepia(13%) saturate(450%) hue-rotate(330deg) brightness(103%) contrast(95%);
+  filter: brightness(0) saturate(100%) invert(89%) sepia(13%) saturate(450%) hue-rotate(330deg) brightness(103%) contrast(95%);
 }
 
 .form-button {
-    margin: 6vh 2vw 6vh 2vw;
-    background-color: transparent;
-    color: var(--font-color);
-    font-size: 2.5vh;
+  margin: 6vh 2vw 6vh 2vw;
+  background-color: transparent;
+  color: var(--font-color);
+  font-size: 2.5vh;
 }
 
 .form-error {
-  display: none;
-  color: #ff6b6b;
-  font-size: 1rem;
-  margin-top: 0.5rem;
-  margin-left: 2vw;
-  min-height: 1.2em;
-  width: calc(100% - 4vw);
-  box-sizing: border-box;
+display: none;
+color: #ff6b6b;
+font-size: 1rem;
+margin-top: 0.5rem;
+margin-left: 2vw;
+min-height: 1.2em;
+width: calc(100% - 4vw);
+box-sizing: border-box;
 }
+
 .form_input--error {
   border-bottom-color: #ff6b6b !important;
   animation: shake 0.3s ease-in-out;
@@ -233,9 +300,9 @@
 }
 
 .container-contacts {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    margin-top: 1vh;
-    padding-bottom: 4vh;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 1vh;
+  padding-bottom: 4vh;
 }

@@ -54,6 +54,18 @@
   .menu_main-button {
     font-size: 8vh;
   }
+
+  .city-info-section {
+    padding: 2rem 4vw;
+    min-height: auto;
+  }
+  .dishes-grid {
+    gap: 1rem;
+  }
+  .dish-card {
+    width: calc(50% - 1rem);
+    flex: 0 1 auto;
+  }
 }
 
 @media (max-width: 480px) {
@@ -107,6 +119,40 @@
     flex-grow: 0;
     height: auto;
   }
+
+  .dishes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 90%;
+  }
+
+  .dish-card {
+    aspect-ratio: auto;
+    width: 100%;
+    height: auto;
+    flex: 1 1 100%;
+  }
+
+  .dish-card:nth-child(n+4) {
+    display: none;
+  }
+
+  .dish-card img {
+    height: 60vh;
+    object-fit: cover;
+  }
+
+  .city-info-section {
+    padding: 1rem 1rem;
+    min-height: auto;
+  }
+
+  .dish-card h4 {
+    font-size: 1.2rem;
+    padding: 1rem;
+    height: auto;
+    min-height: 80px;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -118,16 +164,26 @@
     justify-content: center;
     gap: 20px;
   }
+
+  .dishes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 0 2rem;
+  }
+
+  .dish-card h4 {
+      font-size: 1.5rem;
+  }
 }
 
 @media (orientation: portrait) {
-    .menu_main ul {
-        flex-direction: column;
-        height: 100vh;
-    }
+  .menu_main ul {
+    flex-direction: column;
+    height: 100vh;
+  }
 
-    .menu_main-item {
-        flex: 1;
-        height: auto;
-    }
+  .menu_main-item {
+    flex: 1;
+    height: auto;
+  }
 }

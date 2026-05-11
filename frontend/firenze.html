@@ -15,6 +15,7 @@
     <script src="./src/scripts/script.js" type="module"></script>
     <script src="./src/scripts/validate.js" type="module"></script>
     <script src="./src/scripts/reservation.js" type="module"></script>
+    <script src="./src/scripts/city_dish.js" type="module"></script>
     
   </head>
   <body class="page">
@@ -63,6 +64,14 @@
                 <div class="photo photo-center"></div>
                 <div class="photo photo-right"></div>
             </section>
+        </section>
+        <section class="city-info-section" id="city-info">
+            <div class="city-info-container">
+                <h3>Традиционные блюда</h3>
+                <ul id="dishes-list" class="dishes-grid">
+                    <li class="loading-text">Загрузка фирменных блюд...</li>
+                </ul>
+            </div>
         </section>
         <section class="form-section" id="form">
             <h3>Забронировать столик</h3>
