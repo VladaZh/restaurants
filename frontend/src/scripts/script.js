@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const datetimeInput = document.getElementById('user-datetime');
+  if (!datetimeInput) return;
   
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
