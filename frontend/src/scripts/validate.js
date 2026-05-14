@@ -1,74 +1,81 @@
 import { handleReservationSubmit, setMinDateTime } from "./reservation.js";
 
-const CONFIG = {
-  debounceMs: 300,
-  errorClass: 'form_input--error',
-  successClass: 'form_input--success',
-  buttonSelector: '.form-button',
-};
+class ReservationForm {
+  constructor(selector, options = {}) {
+    this.form = document.querySelector(selector);
+    if (!this.form) return;
 
-const state = {};
+    this.config = {
+      debounceMs: 300,
+      errorClass: 'form_input--error',
+      successClass: 'form_input--success',
+      buttonSelector: '.form-button',
+      ...options
+    };
 
-function init() {
-  const form = document.querySelector('.reserve-form');
-  if (!form) return;
+    this.inputs = Array.from(this.form.querySelectorAll('input[required]'));
+    this.submitBtn = this.form.querySelector(this.config.buttonSelector);
+    
+    this.fieldsState = new Map();
+    
+    this.init();
+  }
 
-  const inputs = form.querySelectorAll('input[required]');
-  const submitBtn = form.querySelector(CONFIG.buttonSelector);
+  init() {
+    this.inputs.forEach(input => {
+      this.fieldsState.set(input.id, { valid: false, touched: false });
 
-  inputs.forEach(input => {
-    state[input.id] = { valid: false, touched: false };
-
-    if (input.type === 'datetime-local') {
-      setMinDateTime(input); 
-      input.step = 60;
-    }
-
-    input.addEventListener('input', debounce(() => {
       if (input.type === 'datetime-local') {
-        setMinDateTime(input); 
+        this._applyDateTimeConstraints(input);
+        input.step = 60;
       }
-      validate(input);
-      updateButton(form, submitBtn);
-    }, CONFIG.debounceMs));
 
-    input.addEventListener('blur', () => {
-      state[input.id].touched = true;
-      validate(input);
-      updateButton(form, submitBtn);
+      input.addEventListener('input', this._createDebouncedHandler(() => this._onInput(input)));
+      input.addEventListener('blur', () => this._onBlur(input));
+      input.addEventListener('focus', () => this._onFocus(input));
     });
 
-    input.addEventListener('focus', () => {
-      if (input.type === 'datetime-local') {
-        setMinDateTime(input); 
-      }
-      clearError(input);
-    });
-  });
+    this.form.addEventListener('submit', (e) => this._onSubmit(e));
+    this.form.addEventListener('reset', () => this._onReset());
+  }
 
-  form.addEventListener('submit', (e) => {
+  _onInput(input) {
+    if (input.type === 'datetime-local') this._applyDateTimeConstraints(input);
+    this._validate(input);
+    this._updateButton();
+  }
+
+  _onBlur(input) {
+    this.fieldsState.get(input.id).touched = true;
+    this._validate(input);
+    this._updateButton();
+  }
+
+  _onFocus(input) {
+    if (input.type === 'datetime-local') this._applyDateTimeConstraints(input);
+    this._clearError(input);
+  }
+
+  _onSubmit(e) {
     e.preventDefault();
-
     let allValid = true;
-    inputs.forEach(input => {
-      if (!validate(input)) {
+
+    this.inputs.forEach(input => {
+      if (!this._validate(input)) {
         allValid = false;
-        if (document.activeElement !== input) {
-          input.focus();
-        }
+        if (document.activeElement !== input) input.focus();
       }
     });
 
     if (allValid) {
-      handleSubmit(form);
+      handleReservationSubmit({ preventDefault: () => {} }, this.form);
     }
-  });
+  }
 
-  form.addEventListener('reset', () => {
-    inputs.forEach(input => {
-      state[input.id] = { valid: false, touched: false };
-      
-      input.classList.remove(CONFIG.errorClass, CONFIG.successClass);
+  _onReset() {
+    this.inputs.forEach(input => {
+      this.fieldsState.set(input.id, { valid: false, touched: false });
+      input.classList.remove(this.config.errorClass, this.config.successClass);
       input.setAttribute('aria-invalid', 'false');
       
       const errorEl = document.getElementById(`${input.id}-error`);
@@ -77,125 +84,106 @@ function init() {
         errorEl.style.display = 'none';
       }
     });
-
-  updateButton(form, submitBtn);
-  });
-}
-
-function validate(input) {
-  const value = input.value.trim();
-  const errorEl = document.getElementById(`${input.id}-error`);
-
-  if (!value && input.required) {
-    showError(input, errorEl, 'Это поле обязательно');
-    return false;
+    this._updateButton();
   }
 
-  if (input.minLength > 0 && value.length < input.minLength) {
-    showError(input, errorEl, `Минимум ${input.minLength} символов`);
-    return false;
-  }
+  _validate(input) {
+    const value = input.value.trim();
+    const errorEl = document.getElementById(`${input.id}-error`);
+    const state = this.fieldsState.get(input.id);
 
-  if (input.maxLength > 0 && value.length > input.maxLength) {
-    showError(input, errorEl, `Не более ${input.maxLength} символов`);
-    return false;
-  }
-
-  if (input.pattern && value) {
-    try {
-      const regex = new RegExp(input.pattern);
-      if (!regex.test(value)) {
-        showError(input, errorEl, input.dataset.errorMessage || 'Неверный формат');
-        return false;
+    if (!value && input.required) {
+      return this._showError(input, errorEl, 'Это поле обязательно');
+    }
+    if (input.minLength > 0 && value.length < input.minLength) {
+      return this._showError(input, errorEl, `Минимум ${input.minLength} символов`);
+    }
+    if (input.maxLength > 0 && value.length > input.maxLength) {
+      return this._showError(input, errorEl, `Не более ${input.maxLength} символов`);
+    }
+    if (input.pattern && value) {
+      try {
+        if (!new RegExp(input.pattern).test(value)) {
+          return this._showError(input, errorEl, input.dataset.errorMessage || 'Неверный формат');
+        }
+      } catch {
+        console.warn('Invalid pattern:', input.id, input.pattern);
       }
-    } catch (e) {
-      console.warn('Invalid pattern for', input.id, input.pattern);
     }
-  }
-
-  if (input.type === 'number' && value) {
-    const num = parseFloat(value);
-    if (input.min !== '' && num < parseFloat(input.min)) {
-      showError(input, errorEl, `Минимум: ${input.min}`);
-      return false;
+    if (input.type === 'number' && value) {
+      const num = parseFloat(value);
+      if (input.min !== '' && num < parseFloat(input.min)) {
+        return this._showError(input, errorEl, `Минимум: ${input.min}`);
+      }
+      if (input.max !== '' && num > parseFloat(input.max)) {
+        return this._showError(input, errorEl, `Максимум: ${input.max}`);
+      }
     }
-    if (input.max !== '' && num > parseFloat(input.max)) {
-      showError(input, errorEl, `Максимум: ${input.max}`);
-      return false;
-    }
-  }
-
-  if (input.type === 'datetime-local' && value) {
-    const [datePart, timePart] = value.split('T');
-    const [Y, M, D] = datePart.split('-').map(Number);
-    const [h, m] = timePart.split(':').map(Number);
-    const selectedDate = new Date(Y, M - 1, D, h, m);
-    const now = new Date();
-
-    if (selectedDate < now) {
-      showError(input, errorEl, 'Нельзя выбрать прошедшую дату и время');
-      return false;
+    if (input.type === 'datetime-local' && value) {
+      const [datePart, timePart] = value.split('T');
+      const [Y, M, D] = datePart.split('-').map(Number);
+      const [h, m] = timePart.split(':').map(Number);
+      const selected = new Date(Y, M - 1, D, h, m);
+      
+      if (selected < new Date()) {
+        return this._showError(input, errorEl, 'Нельзя выбрать прошедшую дату и время');
+      }
+      if (h < 9 || h > 22 || (h === 22 && m > 0)) {
+        return this._showError(input, errorEl, 'Выберите время с 9:00 до 22:00');
+      }
     }
 
-    if (h < 9 || h > 22 || (h === 22 && m > 0)) {
-      showError(input, errorEl, 'Выберите время с 9:00 до 22:00');
-      return false;
+    this._clearError(input);
+    state.valid = true;
+    state.touched = true;
+    return true;
+  }
+
+  _showError(input, errorEl, message) {
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
     }
+    input.classList.add(this.config.errorClass);
+    input.classList.remove(this.config.successClass);
+    input.setAttribute('aria-invalid', 'true');
+    this.fieldsState.get(input.id).valid = false;
+    return false;
   }
 
-  clearError(input);
-  state[input.id] = { valid: true, touched: true };
-  return true;
-}
-
-function showError(input, errorEl, message) {
-  if (errorEl) {
-    errorEl.textContent = message;
-    errorEl.style.display = 'block';
+  _clearError(input) {
+    const errorEl = document.getElementById(`${input.id}-error`);
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+    }
+    input.classList.remove(this.config.errorClass, this.config.successClass);
+    input.setAttribute('aria-invalid', 'false');
   }
-  input.classList.add(CONFIG.errorClass);
-  input.classList.remove(CONFIG.successClass);
-  input.setAttribute('aria-invalid', 'true');
-  state[input.id].valid = false;
-}
 
-function clearError(input) {
-  const errorEl = document.getElementById(`${input.id}-error`);
-  if (errorEl) {
-    errorEl.textContent = '';
-    errorEl.style.display = 'none';
+  _updateButton() {
+    if (!this.submitBtn) return;
+    const allValid = this.inputs.every(inp => this.fieldsState.get(inp.id)?.valid === true);
+    this.submitBtn.disabled = !allValid;
   }
-  input.classList.remove(CONFIG.errorClass);
-  input.classList.remove(CONFIG.successClass);
-  input.setAttribute('aria-invalid', 'false');
-}
 
-function updateButton(form, button) {
-  if (!button || !form) return;
+  _applyDateTimeConstraints(input) {
+    if (typeof setMinDateTime === 'function') setMinDateTime(input);
+  }
 
-  const requiredInputs = form.querySelectorAll('input[required]');
-  const allValid = Array.from(requiredInputs).every(input =>
-    state[input.id]?.valid === true
-  );
-
-  button.disabled = !allValid;
-}
-
-function handleSubmit(form) {
-  const fakeEvent = { preventDefault: () => {} };
-  handleReservationSubmit(fakeEvent, form);
-}
-
-function debounce(fn, delay) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
+  _createDebouncedHandler(fn) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), this.config.debounceMs);
+    };
+  }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => new ReservationForm('.reserve-form'));
 } else {
-  init();
+  new ReservationForm('.reserve-form');
 }
+
+export { ReservationForm };
