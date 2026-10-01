@@ -1,5 +1,6 @@
 from logging.config import fileConfig
 import os
+from pathlib import Path
 
 from alembic import context
 from dotenv import load_dotenv
@@ -7,7 +8,8 @@ from sqlalchemy import engine_from_config, pool
 
 from db import db_models
 
-load_dotenv()
+project_root = Path(__file__).resolve().parent.parent.parent
+load_dotenv(project_root / '.env')
 
 config = context.config
 
@@ -15,10 +17,10 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 
-database_url = os.getenv("DATABASE_URL")
+database_url = os.getenv("DB_URL")
 
 if not database_url:
-    raise RuntimeError("Переменная окружения DATABASE_URL не установлена")
+    raise RuntimeError("Переменная окружения DB_URL не установлена")
 
 
 target_metadata = db_models.Base.metadata
