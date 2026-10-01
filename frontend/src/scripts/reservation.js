@@ -13,11 +13,13 @@ export const collectFormData = (form) => {
     phone_number: form.querySelector('#user-phone')?.value?.trim() || '',
     email: form.querySelector('#user-email')?.value?.trim() || '',
     reservation_date: formatDateTimeLocal(form.querySelector('#user-datetime')?.value),
-    number_of_guests: parseInt(form.querySelector('#guests')?.value || '0', 10)
+    number_of_guests: parseInt(form.querySelector('#guests')?.value || '0', 10),
+    restaurant_name: form.dataset.restaurantName || ''
   };
   log("info", "form_data_collected", {
     guests: payload.number_of_guests,
-    has_date: !!payload.reservation_date
+    has_date: !!payload.reservation_date,
+    restaurant_name: payload.restaurant_name
   });
   return payload;
 };
@@ -38,11 +40,11 @@ export const handleReservationSubmit = (evt, form) => {
 
   toggleButtonLoading(submitBtn, true);
   const payload = collectFormData(form);
-  log("info", "reservation_submit_start");
+  log("info", "reservation_submit_start", { payload });
 
   sendReservation(payload)
     .then((data) => {
-      log("info", "reservation_submit_success");
+      log("info", "reservation_submit_success", { data });
       alert('Столик забронирован. Ждем Вас в нашем ресторане');
       form.reset();
       form.querySelectorAll('input').forEach(input => {
@@ -54,6 +56,7 @@ export const handleReservationSubmit = (evt, form) => {
         input.classList.remove('form_input--error');
         input.classList.remove('form_input--success');
       });
+      toggleButtonLoading(submitBtn, false); // ДОБАВЛЕНО: разблокировка кнопки после успеха
     })
     .catch((error) => {
       log("error", "reservation_submit_failed", {

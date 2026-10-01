@@ -50,6 +50,11 @@ class ReservationForm {
     this.form.addEventListener('reset', () => this._onReset());
 
     log("debug", "form_event_listeners_attached");
+
+    this.inputs.forEach(input => {
+      if (input.value.trim()) this._validate(input);
+    });
+    this._updateButton();
   }
 
   _onInput(input) {

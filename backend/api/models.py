@@ -13,6 +13,7 @@ class FormRequest(BaseModel):
     reservation_date: datetime
     reservation_time_minutes: int = 90
     number_of_guests: int = Field(ge=1, le=10)
+    restaurant_name: str
 
     @field_validator("phone_number")
     @classmethod
@@ -35,24 +36,6 @@ class FormResponse(BaseModel):
     reservation_time_minutes: int = 90
     table_id: int
     number_of_guests: int
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class Table(BaseModel):
-    id: int
-    number_of_guests: int
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class Reservation(BaseModel):
-    id: int
-    name: str
-    guest_number: str
-    reservation_date: datetime
-    reservation_time_minutes: int = 90
-    number_of_guests: int
-    table_id: int
+    restaurant_name: str
 
     model_config = ConfigDict(from_attributes=True)

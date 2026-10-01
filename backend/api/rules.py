@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from db.db_models import Reservation, TableEntity
 from logger import logger
 
-
 WORK_START_HOUR = 9
 WORK_END_HOUR = 22
 
@@ -22,10 +21,14 @@ def validate_working_hours(checking_datetime: datetime) -> None:
     minute = checking_datetime.minute
 
     if hour < WORK_START_HOUR:
-        raise ValueError(f"Ресторан открывается в {WORK_START_HOUR}:00. Выберите другое время.")
+        raise ValueError(
+            f"Ресторан открывается в {WORK_START_HOUR}:00. Выберите другое время."
+        )
 
     if hour > WORK_END_HOUR or (hour == WORK_END_HOUR and minute > 0):
-        raise ValueError(f"Ресторан закрывается в {WORK_END_HOUR}:00. Выберите другое время.")
+        raise ValueError(
+            f"Ресторан закрывается в {WORK_END_HOUR}:00. Выберите другое время."
+        )
 
 
 def find_best_available_table(
@@ -33,6 +36,7 @@ def find_best_available_table(
     checking_datetime: datetime,
     duration_minutes: int,
     number_of_guests: int,
+    restaurant_name: str,
     exclude_reservation_id: Optional[int] = None,
 ) -> Optional[int]:
 
@@ -52,6 +56,7 @@ def find_best_available_table(
     suitable_tables = session.scalars(
         select(TableEntity)
         .where(
+            TableEntity.restaurant_name == restaurant_name,
             TableEntity.number_of_guests >= number_of_guests,
             TableEntity.number_of_guests < number_of_guests * 2,
         )
@@ -88,7 +93,11 @@ def find_best_available_table(
         if is_table_available(table_reservations, checking_datetime, checking_end):
             logger.debug("is_table_available", table_id=table.id)
             return table.id
-    logger.debug("available table is not found", number_of_guests=number_of_guests, date=checking_date)
+    logger.debug(
+        "available table is not found",
+        number_of_guests=number_of_guests,
+        date=checking_date,
+    )
     return None
 
 

@@ -9,7 +9,7 @@ from sqlalchemy import engine_from_config, pool
 from db import db_models
 
 project_root = Path(__file__).resolve().parent.parent.parent
-load_dotenv(project_root / '.env')
+load_dotenv(project_root / ".env")
 
 config = context.config
 

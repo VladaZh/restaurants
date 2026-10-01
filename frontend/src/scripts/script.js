@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
   datetimeInput.classList.add('default-value');
   log("info", "datetime_default_set", { value: localISO });
 
+  datetimeInput.dispatchEvent(new Event('input', { bubbles: true }));
+
   const removeDefaultClass = () => {
     datetimeInput.classList.remove('default-value');
     datetimeInput.removeEventListener('input', removeDefaultClass);

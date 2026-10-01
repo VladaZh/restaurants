@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, func
 
 from db.db_models import Reservation
 
@@ -38,15 +38,16 @@ class ReservationsRepo:
 
     def create(self, data: FormRequest) -> Reservation:
         table_id = find_best_available_table(
-            self.session,
-            data.reservation_date,
-            data.reservation_time_minutes,
-            data.number_of_guests,
+            session=self.session,
+            checking_datetime=data.reservation_date,
+            duration_minutes=data.reservation_time_minutes,
+            number_of_guests=data.number_of_guests,
+            restaurant_name=data.restaurant_name,
         )
         if table_id is None:
             logger.warning("table_id is None")
             raise CreateReservationException(
-                "This time is not available, choose another"
+                "На это время нет свободных столиков. Выберите другое время."
             )
         new_form = Reservation(**data.model_dump())
         new_form.table_id = table_id
@@ -62,13 +63,26 @@ class ReservationsRepo:
         return result
 
     def get_by_phone_number_and_date(
-        self, phone_number: str, reservation_date: datetime
+        self, phone_number: str, reservation_date: datetime, restaurant_name: str
     ) -> Optional[FormRequest]:
-        result = self._get_by_query(
-            phone_number=phone_number, reservation_date=reservation_date
+        stmt = select(Reservation).where(
+            Reservation.phone_number == phone_number,
+            func.date(Reservation.reservation_date) == reservation_date.date(),
+            Reservation.restaurant_name == restaurant_name,
         )
-        logger.info("got by phone_number", phone_number=phone_number, result_is_none=result is None)
-        return result
+        result = self.session.execute(stmt)
+        instance = result.scalar_one_or_none()
+
+        logger.info(
+            "got by phone_number",
+            phone_number=phone_number,
+            result_is_none=instance is None,
+        )
+
+        if instance is None:
+            return None
+
+        return FormRequest.model_validate(instance)
 
     def get_all(self) -> list[FormRequest]:
         stmt = select(Reservation)
@@ -83,7 +97,7 @@ class ReservationsRepo:
 
         if existing is None:
             logger.warning("reservation does not exist", id=id)
-            raise UpdateReservationException("This reservation is not found")
+            raise UpdateReservationException("Эта бронь не найдена")
 
         update_data = data.model_dump(exclude_unset=True, exclude_none=True)
 
@@ -91,6 +105,7 @@ class ReservationsRepo:
             "reservation_date",
             "reservation_time_minutes",
             "number_of_guests",
+            "restaurant_name",
         }
         key_fields_changed = bool(changed_fields & set(update_data.keys()))
 
@@ -102,12 +117,16 @@ class ReservationsRepo:
                 "reservation_time_minutes", existing.reservation_time_minutes
             )
             new_guests = update_data.get("number_of_guests", existing.number_of_guests)
+            new_restaurant = update_data.get(
+                "restaurant_name", existing.restaurant_name
+            )
 
             new_table_id = find_best_available_table(
                 session=self.session,
                 checking_datetime=new_datetime,
                 duration_minutes=new_duration,
                 number_of_guests=new_guests,
+                restaurant_name=new_restaurant,
                 exclude_reservation_id=existing.id,
             )
 
@@ -115,7 +134,7 @@ class ReservationsRepo:
             if new_table_id is None:
                 logger.warning("new_table_id is None")
                 raise UpdateReservationException(
-                    "This time is not available, choose another"
+                    "На это время нет свободных столиков. Выберите другое время."
                 )
 
             update_data["table_id"] = new_table_id
@@ -136,7 +155,7 @@ class ReservationsRepo:
 
         if reservation is None:
             logger.warning("reservation does not exist", id=id)
-            raise DeleteReservationException("This reservation is not found")
+            raise DeleteReservationException("Эта бронь не найдена")
 
         self.session.delete(reservation)
         logger.info("deleted reservation", id=id)

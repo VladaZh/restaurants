@@ -16,7 +16,7 @@
     <script src="./src/scripts/validate.js" type="module"></script>
     <script src="./src/scripts/reservation.js" type="module"></script>
     <script src="./src/scripts/city_dish.js" type="module"></script>
-    
+
   </head>
   <body class="page">
     <main class="content">
@@ -55,7 +55,7 @@
             <p class="about-description">это пространство, где рождается дух настоящей Италии.
                  Вдохновлённый культурой и кулинарными традициями Флоренции, наш ресторан предлагает
                   авторскую интерпретацию классической тосканской кухни. Мы работаем только с сезонными
-                   продуктами, фермерскими сырами, оливковым маслом холодного отжима и винами из лучших 
+                   продуктами, фермерскими сырами, оливковым маслом холодного отжима и винами из лучших
                    виноградников Апеннин. Приглушённый свет, натуральный мрамор, дерево и живая итальянская
                     музыка создают атмосферу тёплой роскоши, в которой время замедляется. Firenze — это не
                      просто ужин, а гастрономическое путешествие в сердце Италии.</p>
@@ -75,7 +75,7 @@
         </section>
         <section class="form-section" id="form">
             <h3>Забронировать столик</h3>
-            <form class="reserve-form">
+            <form class="reserve-form" data-restaurant-name="Firenze">
                 <input
                     type="text"
                     name="user-name"
@@ -122,7 +122,7 @@
                     name="user-datetime"
                     id="user-datetime"
                     class="form_input form_input-datetime"
-                    
+                    required
                     autocomplete="off"
                     min=""
                     max="2026-12-31T23:59"
@@ -146,7 +146,7 @@
                 <button type="submit" class="reserve-button form-button" disabled>
                     забронировать
                 </button>
-                
+
             </form>
         </section>
     </main>
