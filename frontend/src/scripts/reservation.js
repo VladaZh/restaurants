@@ -2,14 +2,9 @@ import { sendReservation } from "./api.js";
 
 const log = (level, event, meta = {}) => console[level]({ ts: new Date().toISOString(), level, event, ...meta });
 
-export const toISOWithTimezone = (dateTimeLocal) => {
+export const formatDateTimeLocal = (dateTimeLocal) => {
   if (!dateTimeLocal) return null;
-  const date = new Date(dateTimeLocal);
-  if (isNaN(date.getTime())) {
-    log("warn", "invalid_date_format", { dateTimeLocal });
-    return dateTimeLocal;
-  }
-  return date.toISOString();
+  return dateTimeLocal;
 };
 
 export const collectFormData = (form) => {
@@ -17,7 +12,7 @@ export const collectFormData = (form) => {
     name: form.querySelector('#user-name')?.value?.trim() || '',
     phone_number: form.querySelector('#user-phone')?.value?.trim() || '',
     email: form.querySelector('#user-email')?.value?.trim() || '',
-    reservation_date: toISOWithTimezone(form.querySelector('#user-datetime')?.value),
+    reservation_date: formatDateTimeLocal(form.querySelector('#user-datetime')?.value),
     number_of_guests: parseInt(form.querySelector('#guests')?.value || '0', 10)
   };
   log("info", "form_data_collected", {
@@ -67,19 +62,21 @@ export const handleReservationSubmit = (evt, form) => {
         detail: error.detail || error.message
       });
 
-      if (error.status === 409) {
-        alert('Ошибка: на выбранное время нет свободных столиков. Выберите другую дату или время')
+      if (error.status === 400) {
+        alert(error.detail);
+      } else if (error.status === 409) {
+        alert(error.detail);
       } else if (error.status === 422) {
-        alert('Ошибка в данных формы');
+        alert('Ошибка в данных формы. Проверьте правильность заполнения.');
       } else if (error.name === 'AbortError') {
-        alert(`Превышено время ожидания ответа сервера`)
+        alert('Превышено время ожидания ответа сервера. Попробуйте позже.');
       } else if (error instanceof TypeError) {
-        alert(`Не удалось соединиться с сервером`)
+        alert('Не удалось соединиться с сервером. Проверьте интернет.');
       } else {
-        alert(`Ошибка`)
+        alert('Произошла непредвиденная ошибка. Попробуйте позже.');
       }
       toggleButtonLoading(submitBtn, false);
-    })
+    });
 };
 
 export const setMinDateTime = (input) => {

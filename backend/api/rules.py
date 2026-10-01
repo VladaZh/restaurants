@@ -6,6 +6,28 @@ from db.db_models import Reservation, TableEntity
 from logger import logger
 
 
+WORK_START_HOUR = 9
+WORK_END_HOUR = 22
+
+
+def validate_working_hours(checking_datetime: datetime) -> None:
+    if checking_datetime.tzinfo is None:
+        if checking_datetime < datetime.now():
+            raise ValueError("Нельзя выбрать прошедшую дату и время")
+    else:
+        if checking_datetime < datetime.now(timezone.utc):
+            raise ValueError("Нельзя выбрать прошедшую дату и время")
+
+    hour = checking_datetime.hour
+    minute = checking_datetime.minute
+
+    if hour < WORK_START_HOUR:
+        raise ValueError(f"Ресторан открывается в {WORK_START_HOUR}:00. Выберите другое время.")
+
+    if hour > WORK_END_HOUR or (hour == WORK_END_HOUR and minute > 0):
+        raise ValueError(f"Ресторан закрывается в {WORK_END_HOUR}:00. Выберите другое время.")
+
+
 def find_best_available_table(
     session: Session,
     checking_datetime: datetime,
