@@ -13,6 +13,7 @@ from db.exceptions import (
 )
 from api.models import FormRequest
 from api.rules import find_best_available_table
+from logger import logger
 
 
 class ReservationsRepo:
@@ -43,6 +44,7 @@ class ReservationsRepo:
             data.number_of_guests,
         )
         if table_id is None:
+            logger.warning("table_id is None")
             raise CreateReservationException(
                 "This time is not available, choose another"
             )
@@ -50,22 +52,28 @@ class ReservationsRepo:
         new_form.table_id = table_id
         self.session.add(new_form)
         self.session.commit()
+        logger.info("created reservation", id=new_form.id)
         self.session.refresh(new_form)
         return new_form
 
     def get_by_id(self, id: int) -> Optional[FormRequest]:
-        return self._get_by_query(id=id)
+        result = self._get_by_query(id=id)
+        logger.info("got reservation by id", id=id, result_is_none=result is None)
+        return result
 
     def get_by_phone_number_and_date(
         self, phone_number: str, reservation_date: datetime
     ) -> Optional[FormRequest]:
-        return self._get_by_query(
+        result = self._get_by_query(
             phone_number=phone_number, reservation_date=reservation_date
         )
+        logger.info("got by phone_number", phone_number=phone_number, result_is_none=result is None)
+        return result
 
     def get_all(self) -> list[FormRequest]:
         stmt = select(Reservation)
         results = self.session.execute(stmt).scalars().all()
+        logger.info("got all reservations", results_is_none=results is None)
         return [FormRequest.model_validate(reservation) for reservation in results]
 
     def update(self, id: int, data: FormRequest) -> Optional[FormRequest]:
@@ -74,6 +82,7 @@ class ReservationsRepo:
         existing = result.scalar_one_or_none()
 
         if existing is None:
+            logger.warning("reservation does not exist", id=id)
             raise UpdateReservationException("This reservation is not found")
 
         update_data = data.model_dump(exclude_unset=True, exclude_none=True)
@@ -102,7 +111,9 @@ class ReservationsRepo:
                 exclude_reservation_id=existing.id,
             )
 
+            logger.info("new_table_id", new_table_id=new_table_id)
             if new_table_id is None:
+                logger.warning("new_table_id is None")
                 raise UpdateReservationException(
                     "This time is not available, choose another"
                 )
@@ -113,6 +124,7 @@ class ReservationsRepo:
             setattr(existing, field, value)
 
         self.session.commit()
+        logger.info("updated reservation", id=id, update_data=update_data)
         self.session.refresh(existing)
 
         return self._model_to_read(existing)
@@ -123,8 +135,10 @@ class ReservationsRepo:
         reservation = result.scalar_one_or_none()
 
         if reservation is None:
+            logger.warning("reservation does not exist", id=id)
             raise DeleteReservationException("This reservation is not found")
 
         self.session.delete(reservation)
+        logger.info("deleted reservation", id=id)
         self.session.commit()
         return True

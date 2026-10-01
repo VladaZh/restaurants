@@ -1,9 +1,14 @@
 import { handleReservationSubmit, setMinDateTime } from "./reservation.js";
 
+const log = (level, event, meta = {}) => console[level]({ ts: new Date().toISOString(), level, event, ...meta });
+
 class ReservationForm {
   constructor(selector, options = {}) {
     this.form = document.querySelector(selector);
-    if (!this.form) return;
+    if (!this.form) {
+      log("warn", "form_not_found", { selector });
+      return;
+    }
 
     this.config = {
       debounceMs: 300,
@@ -15,9 +20,15 @@ class ReservationForm {
 
     this.inputs = Array.from(this.form.querySelectorAll('input[required]'));
     this.submitBtn = this.form.querySelector(this.config.buttonSelector);
-    
+
     this.fieldsState = new Map();
-    
+
+    log("info", "form_initialized", {
+      selector,
+      inputs_count: this.inputs.length,
+      has_submit_button: !!this.submitBtn
+    });
+
     this.init();
   }
 
@@ -37,6 +48,8 @@ class ReservationForm {
 
     this.form.addEventListener('submit', (e) => this._onSubmit(e));
     this.form.addEventListener('reset', () => this._onReset());
+
+    log("debug", "form_event_listeners_attached");
   }
 
   _onInput(input) {
@@ -68,7 +81,10 @@ class ReservationForm {
     });
 
     if (allValid) {
+      log("info", "form_validation_passed");
       handleReservationSubmit({ preventDefault: () => {} }, this.form);
+    } else {
+      log("warn", "form_validation_failed");
     }
   }
 
@@ -77,7 +93,7 @@ class ReservationForm {
       this.fieldsState.set(input.id, { valid: false, touched: false });
       input.classList.remove(this.config.errorClass, this.config.successClass);
       input.setAttribute('aria-invalid', 'false');
-      
+
       const errorEl = document.getElementById(`${input.id}-error`);
       if (errorEl) {
         errorEl.textContent = '';
@@ -85,6 +101,7 @@ class ReservationForm {
       }
     });
     this._updateButton();
+    log("info", "form_reset");
   }
 
   _validate(input) {
@@ -107,7 +124,7 @@ class ReservationForm {
           return this._showError(input, errorEl, input.dataset.errorMessage || 'Неверный формат');
         }
       } catch {
-        console.warn('Invalid pattern:', input.id, input.pattern);
+        log("warn", "invalid_regex_pattern", { input_id: input.id, pattern: input.pattern });
       }
     }
     if (input.type === 'number' && value) {
@@ -124,7 +141,7 @@ class ReservationForm {
       const [Y, M, D] = datePart.split('-').map(Number);
       const [h, m] = timePart.split(':').map(Number);
       const selected = new Date(Y, M - 1, D, h, m);
-      
+
       if (selected < new Date()) {
         return this._showError(input, errorEl, 'Нельзя выбрать прошедшую дату и время');
       }
@@ -136,6 +153,7 @@ class ReservationForm {
     this._clearError(input);
     state.valid = true;
     state.touched = true;
+    log("debug", "field_validated", { input_id: input.id, valid: true });
     return true;
   }
 
@@ -148,6 +166,7 @@ class ReservationForm {
     input.classList.remove(this.config.successClass);
     input.setAttribute('aria-invalid', 'true');
     this.fieldsState.get(input.id).valid = false;
+    log("warn", "field_validation_error", { input_id: input.id, error: message });
     return false;
   }
 
@@ -165,6 +184,7 @@ class ReservationForm {
     if (!this.submitBtn) return;
     const allValid = this.inputs.every(inp => this.fieldsState.get(inp.id)?.valid === true);
     this.submitBtn.disabled = !allValid;
+    log("debug", "submit_button_state", { disabled: !allValid });
   }
 
   _applyDateTimeConstraints(input) {

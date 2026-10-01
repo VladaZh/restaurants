@@ -3,6 +3,7 @@ from typing import Optional
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from db.db_models import Reservation, TableEntity
+from logger import logger
 
 
 def find_best_available_table(
@@ -14,13 +15,16 @@ def find_best_available_table(
 ) -> Optional[int]:
 
     if number_of_guests <= 0:
+        logger.warning("number_of_guests <= 0")
         raise ValueError("Количество гостей должно быть больше 0")
     if duration_minutes <= 0:
+        logger.warning("duration_minutes <= 0")
         raise ValueError("Длительность бронирования должно быть больше 0")
     if checking_datetime.tzinfo is None:
+        logger.warning("checking_datetime.tzinfo is None")
         checking_datetime = checking_datetime.replace(tzinfo=timezone.utc)
-
     if checking_datetime < datetime.now(timezone.utc):
+        logger.warning("checking_datetime < datetime.now(timezone.utc)")
         raise ValueError("Нельзя бронировать на прошедшее время")
 
     suitable_tables = session.scalars(
@@ -33,6 +37,7 @@ def find_best_available_table(
     ).all()
 
     if not suitable_tables:
+        logger.warning("suitable_tables is None")
         return None
 
     checking_end = checking_datetime + timedelta(minutes=duration_minutes)
@@ -59,8 +64,9 @@ def find_best_available_table(
         table_reservations = reservations_by_table.get(table.id, [])
 
         if is_table_available(table_reservations, checking_datetime, checking_end):
+            logger.debug("is_table_available", table_id=table.id)
             return table.id
-
+    logger.debug("available table is not found", number_of_guests=number_of_guests, date=checking_date)
     return None
 
 
