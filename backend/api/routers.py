@@ -1,12 +1,13 @@
 from typing import Optional
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
+from db.exceptions import CreateReservationException
 from db.reservations_repo import ReservationsRepo
 from db.session import get_db
-from models import FormRequest, FormResponse
+from api.models import FormRequest, FormResponse
 
 router = APIRouter()
 
@@ -19,7 +20,7 @@ router = APIRouter()
 )
 def send_form(
     reservation: FormRequest, db: Session = Depends(get_db)
-) -> Response | Optional[FormRequest]:
+) -> Response | Optional[FormResponse]:
     repo = ReservationsRepo(db)
 
     if reservation is None:
@@ -31,4 +32,11 @@ def send_form(
     if existing:
         return Response(status_code=status.HTTP_409_CONFLICT)
 
-    return repo.create(reservation)
+    try:
+        reservation_db = repo.create(reservation)
+        return FormResponse.model_validate(reservation_db)
+    except CreateReservationException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(e),
+        )

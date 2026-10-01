@@ -11,6 +11,7 @@ class FormRequest(BaseModel):
     phone_number: str = Field(min_length=6, max_length=20)
     email: EmailStr
     reservation_date: datetime
+    reservation_time_minutes: int = 90
     number_of_guests: int = Field(ge=1, le=10)
 
     @field_validator("phone_number")
@@ -31,6 +32,27 @@ class FormResponse(BaseModel):
     phone_number: str
     email: Optional[str] = None
     reservation_date: datetime
+    reservation_time_minutes: int = 90
+    table_id: int
     number_of_guests: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Table(BaseModel):
+    id: int
+    number_of_guests: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Reservation(BaseModel):
+    id: int
+    name: str
+    guest_number: str
+    reservation_date: datetime
+    reservation_time_minutes: int = 90
+    number_of_guests: int
+    table_id: int
 
     model_config = ConfigDict(from_attributes=True)

@@ -16,6 +16,8 @@ RUN poetry config virtualenvs.create false \
 
 COPY . /app/
 
+RUN chmod +x /app/entrypoint.sh
+
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/app/entrypoint.sh"]

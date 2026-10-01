@@ -36,7 +36,7 @@ export const handleReservationSubmit = (evt, form) => {
 
   sendReservation(payload)
     .then((data) => {
-      alert('Форма успешно отправлена. На указанный номер перезвонят в течение 30 минут для подтверждения брони.');
+      alert('Столик забронирован. Ждем Вас в нашем ресторане');
       form.reset();
       form.querySelectorAll('input').forEach(input => {
         const errorEl = document.getElementById(`${input.id}-error`);
@@ -52,7 +52,7 @@ export const handleReservationSubmit = (evt, form) => {
       console.error('Reservation error:', error);
       
       if (error.status === 409) {
-        alert('Ошибка: такая бронь уже существует. Выберите другое время или дату.')
+        alert('Ошибка: на выбранное время нет свободных столиков. Выберите другую дату или время')
       } else if (error.status === 422) {
         alert('Ошибка в данных формы');
       } else if (error.name === 'AbortError') {

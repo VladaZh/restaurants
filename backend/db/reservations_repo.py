@@ -5,7 +5,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 
 from db.db_models import Reservation
-from models import FormRequest
+
+from db.exceptions import (
+    CreateReservationException,
+    UpdateReservationException,
+    DeleteReservationException,
+)
+from api.models import FormRequest
+from api.rules import find_best_available_table
 
 
 class ReservationsRepo:
@@ -29,7 +36,18 @@ class ReservationsRepo:
         return FormRequest.model_validate(instance)
 
     def create(self, data: FormRequest) -> Reservation:
+        table_id = find_best_available_table(
+            self.session,
+            data.reservation_date,
+            data.reservation_time_minutes,
+            data.number_of_guests,
+        )
+        if table_id is None:
+            raise CreateReservationException(
+                "This time is not available, choose another"
+            )
         new_form = Reservation(**data.model_dump())
+        new_form.table_id = table_id
         self.session.add(new_form)
         self.session.commit()
         self.session.refresh(new_form)
@@ -56,9 +74,41 @@ class ReservationsRepo:
         existing = result.scalar_one_or_none()
 
         if existing is None:
-            return None
+            raise UpdateReservationException("This reservation is not found")
 
         update_data = data.model_dump(exclude_unset=True, exclude_none=True)
+
+        changed_fields = {
+            "reservation_date",
+            "reservation_time_minutes",
+            "number_of_guests",
+        }
+        key_fields_changed = bool(changed_fields & set(update_data.keys()))
+
+        if key_fields_changed:
+            new_datetime = update_data.get(
+                "reservation_date", existing.reservation_date
+            )
+            new_duration = update_data.get(
+                "reservation_time_minutes", existing.reservation_time_minutes
+            )
+            new_guests = update_data.get("number_of_guests", existing.number_of_guests)
+
+            new_table_id = find_best_available_table(
+                session=self.session,
+                checking_datetime=new_datetime,
+                duration_minutes=new_duration,
+                number_of_guests=new_guests,
+                exclude_reservation_id=existing.id,
+            )
+
+            if new_table_id is None:
+                raise UpdateReservationException(
+                    "This time is not available, choose another"
+                )
+
+            update_data["table_id"] = new_table_id
+
         for field, value in update_data.items():
             setattr(existing, field, value)
 
@@ -73,7 +123,7 @@ class ReservationsRepo:
         reservation = result.scalar_one_or_none()
 
         if reservation is None:
-            return False
+            raise DeleteReservationException("This reservation is not found")
 
         self.session.delete(reservation)
         self.session.commit()
