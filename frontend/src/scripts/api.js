@@ -1,5 +1,5 @@
 const API_CONFIG = {
-  baseUrl: "http://localhost:8000", 
+  baseUrl: "/api",
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"

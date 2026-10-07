@@ -116,6 +116,7 @@ restaurants /
 │   ├── .gitignore
 │   ├── firenze.html 
 │   ├── index.html
+│   ├── nginx.conf
 │   ├── Dockerfile
 │   ├── package.json 
 │   ├── package-lock.json 
