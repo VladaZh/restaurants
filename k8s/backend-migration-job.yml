@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration
+  namespace: restaurants
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 60
+  template:
+    spec:
+      containers:
+      - name: db-migration
+        image: sre-backend:latest
+        imagePullPolicy: IfNotPresent
+        command: ["alembic", "upgrade", "head"]
+        env:
+          - name: DB_URL
+            valueFrom:
+              secretKeyRef:
+                name: db-secrets
+                key: DB_URL
+      restartPolicy: OnFailure

@@ -53,8 +53,9 @@
 Бронирования между ресторанами не пересекаются 
 (столик №1 ресторана Roma не влияет на столик №1 ресторана Firenze).
 
-## Запуск проекта
-1. Создание файлов .env по примеру .env.example
+## Запуск проекта с помощью docker-compose
+1. Создание файлов:
+   - .env по примеру .env.example
 2. Запуск приложения с помощью Docker Compose
 ```Bash
 docker compose up -d -- build
@@ -63,11 +64,65 @@ docker compose up -d -- build
 ```http://localhost```
 
 
+## Запуск проекта с помощью minikube
+1. Создание файлов:
+   - .env по примеру .env.example
+   - k8s/db-secrets.yml по примеру db-secrets-example.yml
+2. Запуск minikube
+```Bash
+minikube start --driver=docker --container-runtime=docker
+```
+3. Собрать Docker-образы внутри Minikube 
+```Bash
+eval $(minikube docker-env)
+
+docker build -t sre-backend:latest ./backend
+docker build -t sre-frontend:latest ./frontend
+```
+4. Создание пространства имен
+```Bash
+kubectl apply -f k8s/namespace-restaurants.yml
+```
+5. Запуск приложения
+```Bash
+kubectl apply -f k8s/ -n restaurants
+```
+6. Вывод всех запущенных Pod'ов
+```Bash 
+kubectl get pods -n restaurants
+```
+7. Открыть приложение автоматически
+```Bash 
+minikube service frontend -n restaurants
+```
+8. Получить URL приложения
+```Bash
+minikube service frontend -n restaurants --url
+```
+9. Масштабирование сервисов
+- Backend:
+```Bash
+kubectl scale deployment backend-deployment --replicas=4 -n restaurants
+```
+- Frontend:
+```Bash
+kubectl scale deployment frontend-deployment --replicas=4 -n restaurants
+```
+10. Остановить приложение
+```Bash
+minikube stop
+```
+11. Удалить кластер
+```Bash
+minikube delete
+```
+
+
 ## Структура проекта
 ```
 restaurants /
 ├── backend /
-│   ├── alembic / # миграции БД
+│   ├── alembic /                   # миграции БД
 │   │   ├── versions /
 │   │   │   └── 295c2a61604f_initial_migration.py 
 │   │   ├── env.py 
@@ -75,19 +130,19 @@ restaurants /
 │   │   └── script.py.mako 
 │   ├── api /
 │   │   ├── __init__.py 
-│   │   ├── models.py # модели данных для api
-│   │   ├── routers.py # endpoints
-│   │   └── rules.py # бизнес-логика
+│   │   ├── models.py               # модели данных для api
+│   │   ├── routers.py              # endpoints
+│   │   └── rules.py                # бизнес-логика
 │   ├── db /
 │   │   ├── __init__.py 
-│   │   ├── db_models.py # модели данных для БД
-│   │   ├── exceptions.py # кастомные ошибки
-│   │   ├── reservations_repo.py # CRUD
-│   │   └── session.py # БД-сессия
+│   │   ├── db_models.py            # модели данных для БД
+│   │   ├── exceptions.py           # кастомные ошибки
+│   │   ├── reservations_repo.py    # CRUD
+│   │   └── session.py              # БД-сессия
 │   ├── alembic.ini 
 │   ├── config.py 
 │   ├── Dockerfile 
-│   ├── entrypoint.sh # команда запуска приложения
+│   ├── entrypoint.sh               # команда запуска приложения
 │   ├── logger.py 
 │   ├── main.py 
 │   ├── poetry.lock 
@@ -123,10 +178,21 @@ restaurants /
 │   ├── roma.html 
 │   │── vite.config.js 
 │   └── vitest.config.js 
+├── k8s /                           # манифесты
+│   ├── backend-development.yml
+│   ├── backend-migration-job.yml
+│   ├── backend-service.yml
+│   ├── db-secrets.yml              # файл должен быть создан по примеру из db-secrets-example.yml
+│   ├── db-service.yml
+│   ├── db-statefulset.yml
+│   ├── frontend-deployment.yml
+│   ├── frontend-service.yml
+│   ├── namespace-restaurants.yml
 ├── .env 
 ├── .env.example
 ├── .gitignore 
 ├── 12factors.md # файл с описанием соответствия приложения 12 факторам
+├── db-secrets-example.yml # пример файла k8s/db-secrets.yml
 ├── docker-compose.yml 
 └── README.md 
 ```

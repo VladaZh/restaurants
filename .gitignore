@@ -12,6 +12,7 @@ dmypy.json
 
 .venv
 .env
+.db-secrets.yml
 .coverage
 
 .idea/
