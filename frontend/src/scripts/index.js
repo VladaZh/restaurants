@@ -1,6 +1,16 @@
 import { setMinDateTime, handleReservationSubmit } from "./reservation.js";
 
-const log = (level, event, meta = {}) => console[level]({ ts: new Date().toISOString(), level, event, ...meta });
+const log = (level, event, meta = {}) => {
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: level.toUpperCase(),
+    message: event,
+    service: {
+      name: "restaurant-frontend"
+    },
+    ...meta
+  }));
+};
 
 const initReservationForm = () => {
   const form = document.querySelector('.reserve-form');

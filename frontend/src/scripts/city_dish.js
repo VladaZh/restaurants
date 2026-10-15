@@ -1,4 +1,14 @@
-const log = (level, event, meta = {}) => console[level]({ ts: new Date().toISOString(), level, event, ...meta });
+const log = (level, event, meta = {}) => {
+    console.log(JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: level.toUpperCase(),
+        message: event,
+        service: {
+            name: "restaurant-frontend"
+        },
+        ...meta
+    }));
+};
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -7,6 +17,15 @@ document.addEventListener('DOMContentLoaded', function() {
         log("info", "api_request_start", { url });
 
         const response = await fetch(url);
+
+        if (!response.ok) {
+            log("error", "api_http_error", {
+                url,
+                status_code: response.status
+            });
+            throw new Error(`HTTP ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (!data.meals || data.meals.length === 0) {
@@ -14,7 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
             throw new Error('Блюда не найдены');
         }
 
-        log("info", "api_request_success", { total_items: data.meals.length });
+        log("info", "api_request_success", {
+            total_items: data.meals.length
+        });
 
         const shuffled = [...data.meals];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -31,12 +52,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const dishesContainer = document.getElementById('dishes-list');
     if (dishesContainer) {
-        dishesContainer.innerHTML = '<li class="loading-text">Загрузка фирменных блюд...</li>';
+        dishesContainer.innerHTML =
+            '<li class="loading-text">Загрузка фирменных блюд...</li>';
 
         fetchDishes().then(dishes => {
             if (!dishes.length) {
                 log("warn", "render_data_empty");
-                dishesContainer.innerHTML = '<li class="error-text">Не удалось загрузить блюда. Попробуйте позже.</li>';
+                dishesContainer.innerHTML =
+                    '<li class="error-text">Не удалось загрузить блюда. Попробуйте позже.</li>';
                 return;
             }
 
@@ -44,17 +67,24 @@ document.addEventListener('DOMContentLoaded', function() {
             for (const dish of dishes) {
                 cardsHtml += `
                     <li class="dish-card">
-                        <img src="${dish.image}" alt="${dish.name}" onerror="this.src='https://via.placeholder.com/280x280?text=Нет+фото'">
+                        <img src="${dish.image}" alt="${dish.name}">
                         <h4>${dish.name}</h4>
                     </li>
                 `;
             }
-            log("info", "dom_render_success", { rendered_count: dishes.length });
+
+            log("info", "dom_render_success", {
+                rendered_count: dishes.length
+            });
+
             dishesContainer.innerHTML = cardsHtml;
         }).catch(err => {
-            log("error", "operation_failed", { error: err.message });
-            dishesContainer.innerHTML = '<li class="error-text">Ошибка загрузки меню. Обновите страницу.</li>';
-            console.error(err);
+            log("error", "operation_failed", {
+                error: err.message
+            });
+
+            dishesContainer.innerHTML =
+                '<li class="error-text">Ошибка загрузки меню. Обновите страницу.</li>';
         });
     }
 });

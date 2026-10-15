@@ -116,6 +116,11 @@ minikube stop
 ```Bash
 minikube delete
 ```
+12. Открыть VMUI
+```Bash
+kubectl -n restaurants port-forward svc/victoria-logs 9428:9428
+```
+далее открыть <http://localhost:9428/select/vmui>
 
 
 ## Структура проекта
@@ -184,10 +189,18 @@ restaurants /
 │   ├── backend-service.yml
 │   ├── db-secrets.yml              # файл должен быть создан по примеру из db-secrets-example.yml
 │   ├── db-service.yml
+│   ├── logs-statefulset.yml
 │   ├── db-statefulset.yml
 │   ├── frontend-deployment.yml
 │   ├── frontend-service.yml
 │   ├── namespace-restaurants.yml
+│   ├── vector-clasterrole.yml
+│   ├── vector-clasterrolebinding.yml
+│   ├── vector-configmap.yml
+│   ├── vector-daemonset.yml
+│   ├── vector-serviceaccount.yml
+│   ├── victoria-logs-service.yml
+│   └── victoria-logs-statefulset.yml
 ├── .env 
 ├── .env.example
 ├── .gitignore 

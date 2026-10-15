@@ -1,6 +1,16 @@
 import { sendReservation } from "./api.js";
 
-const log = (level, event, meta = {}) => console[level]({ ts: new Date().toISOString(), level, event, ...meta });
+const log = (level, event, meta = {}) => {
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: level.toUpperCase(),
+    message: event,
+    service: {
+      name: "restaurant-frontend"
+    },
+    ...meta
+  }));
+};
 
 export const formatDateTimeLocal = (dateTimeLocal) => {
   if (!dateTimeLocal) return null;
@@ -40,11 +50,17 @@ export const handleReservationSubmit = (evt, form) => {
 
   toggleButtonLoading(submitBtn, true);
   const payload = collectFormData(form);
-  log("info", "reservation_submit_start", { payload });
+
+  log("info", "reservation_submit_start", {
+    guests: payload.number_of_guests,
+    restaurant_name: payload.restaurant_name,
+    has_date: !!payload.reservation_date
+  });
 
   sendReservation(payload)
-    .then((data) => {
-      log("info", "reservation_submit_success", { data });
+    .then(() => {
+      log("info", "reservation_submit_success");
+
       alert('Столик забронирован. Ждем Вас в нашем ресторане');
       form.reset();
       form.querySelectorAll('input').forEach(input => {
@@ -56,18 +72,17 @@ export const handleReservationSubmit = (evt, form) => {
         input.classList.remove('form_input--error');
         input.classList.remove('form_input--success');
       });
-      toggleButtonLoading(submitBtn, false); // ДОБАВЛЕНО: разблокировка кнопки после успеха
+
+      toggleButtonLoading(submitBtn, false);
     })
     .catch((error) => {
       log("error", "reservation_submit_failed", {
-        status: error.status,
-        name: error.name,
+        status_code: error.status,
+        error_name: error.name,
         detail: error.detail || error.message
       });
 
-      if (error.status === 400) {
-        alert(error.detail);
-      } else if (error.status === 409) {
+      if (error.status === 400 || error.status === 409) {
         alert(error.detail);
       } else if (error.status === 422) {
         alert('Ошибка в данных формы. Проверьте правильность заполнения.');

@@ -18,6 +18,32 @@ services:
       timeout: 5s
       retries: 5
 
+  logs:
+    image: victoriametrics/victoria-logs:v1.53.0
+    ports:
+     - "9428:9428"
+    command:
+      - "--storageDataPath=/restaurants-logs-data"
+    volumes:
+      - restaurants-logs-data:/restaurants-logs-data
+    restart: always
+
+  vector:
+    image: docker.io/timberio/vector:0.59.0-alpine
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: /var/lib/docker
+        target: /var/lib/docker
+      - ./vector-vl-single.yml:/etc/vector/vector.yaml:ro
+    depends_on: [ logs ]
+    ports:
+      - "8686:8686"
+    user: root
+    restart: always
+
   frontend:
     build: 
       context: ./frontend
@@ -39,3 +65,4 @@ services:
 
 volumes:
   restaurants_app_data:
+  restaurants-logs-data:

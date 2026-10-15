@@ -1,4 +1,14 @@
-const log = (level, event, meta = {}) => console[level]({ ts: new Date().toISOString(), level, event, ...meta });
+const log = (level, event, meta = {}) => {
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: level.toUpperCase(),
+    message: event,
+    service: {
+      name: "restaurant-frontend"
+    },
+    ...meta
+  }));
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   const datetimeInput = document.getElementById('user-datetime');
@@ -11,7 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setHours(12, 30, 0, 0);
 
-  const localISO = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000)
+  const localISO = new Date(
+    tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000
+  )
     .toISOString()
     .slice(0, 16);
 
