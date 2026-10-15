@@ -44,6 +44,19 @@ services:
     user: root
     restart: always
 
+  grafana:
+    image: grafana/grafana:13.0.11-slim
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+      - './grafana-datasources.yml:/etc/grafana/provisioning/datasources/victorialogs.yml:ro'
+    environment:
+      GF_INSTALL_PLUGINS: victoriametrics-logs-datasource
+    depends_on:
+      - logs
+
   frontend:
     build: 
       context: ./frontend
@@ -66,3 +79,4 @@ services:
 volumes:
   restaurants_app_data:
   restaurants-logs-data:
+  grafana_storage:
