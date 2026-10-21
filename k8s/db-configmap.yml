@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-configmap
+  namespace: restaurants
+data:
+  POSTGRES_DB: "restaurants"
+  POSTGRES_HOST: "db"
+  POSTGRES_PORT: "5432"
