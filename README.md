@@ -58,7 +58,7 @@
    - .env по примеру .env.example
 2. Запуск приложения с помощью Docker Compose
 ```Bash
-docker compose up -d -- build
+docker compose up -d --build
 ```
 3. Приложение доступно по адресу:
 ```http://localhost```

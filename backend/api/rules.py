@@ -4,6 +4,7 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from db.db_models import Reservation, TableEntity
 from logger import logger
+from metrics import table_search_total
 
 WORK_START_HOUR = 9
 WORK_END_HOUR = 22
@@ -65,6 +66,7 @@ def find_best_available_table(
 
     if not suitable_tables:
         logger.warning("suitable_tables is None")
+        table_search_total.labels(result="not_found").inc()
         return None
 
     checking_end = checking_datetime + timedelta(minutes=duration_minutes)
@@ -92,12 +94,14 @@ def find_best_available_table(
 
         if is_table_available(table_reservations, checking_datetime, checking_end):
             logger.debug("is_table_available", table_id=table.id)
+            table_search_total.labels(result="found").inc()
             return table.id
     logger.debug(
         "available table is not found",
         number_of_guests=number_of_guests,
         date=checking_date,
     )
+    table_search_total.labels(result="not_found").inc()
     return None
 
 
