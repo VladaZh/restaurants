@@ -13,3 +13,10 @@ data:
         url: http://victoria-logs:9428
         isDefault: true
         editable: true
+      - name: VictoriaMetrics
+        type: prometheus
+        uid: victoriametrics
+        access: proxy
+        url: http://vmsingle-victoria-metrics-single-server.default.svc.cluster.local:8428
+        isDefault: false
+        editable: true

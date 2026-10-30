@@ -33,3 +33,13 @@ spec:
               secretKeyRef:
                 name: db-secrets
                 key: DB_URL
+          - name: CHAOS_ERROR_RATE
+            value: "0"
+          - name: CHAOS_DELAY_MS
+            value: "0"
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
