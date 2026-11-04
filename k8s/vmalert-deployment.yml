@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmalert
+  namespace: restaurants
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vmalert
+  template:
+    metadata:
+      labels:
+        app: vmalert
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8880"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: vmalert
+          image: victoriametrics/vmalert:v1.102.0
+          args:
+            - -rule=/etc/vmalert/rules/*.yml
+            - -datasource.url=http://vmsingle-victoria-metrics-single-server.default.svc.cluster.local:8428
+            - -remoteWrite.url=http://vmsingle-victoria-metrics-single-server.default.svc.cluster.local:8428
+            - -notifier.url=http://alertmanager:9093
+            - -evaluationInterval=15s
+            - -httpListenAddr=:8880
+            - -external.url=http://localhost:8880
+          ports:
+            - name: http
+              containerPort: 8880
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: rules
+              mountPath: /etc/vmalert/rules
+              readOnly: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+      volumes:
+        - name: rules
+          configMap:
+            name: vmalert-rules

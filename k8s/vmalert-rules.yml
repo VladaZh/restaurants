@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vmalert-rules
+  namespace: restaurants
+data:
+  alerts.yml: |
+    groups:
+      - name: restaurants-service
+        rules:
+          - alert: ReservationErrorsHigh
+            expr: |
+              sum(rate(http_requests_total{handler="/send-form/",status=~"5.."}[2m]))
+                /
+              sum(rate(http_requests_total{handler="/send-form/"}[2m])) > 0.05
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Более 5% запросов бронирования завершаются ошибкой 5xx"
+              description: "Доля ошибок 5xx на POST /send-form/ за 2 минуты: {{ $value | humanizePercentage }} (порог 5%, SLO доступности 99%)."
+
+          - alert: ReservationLatencyHigh
+            expr: |
+              1 - (
+                sum(rate(http_request_duration_seconds_bucket{handler="/send-form/",le="0.5"}[2m]))
+                  /
+                sum(rate(http_request_duration_seconds_count{handler="/send-form/"}[2m]))
+              ) > 0.1
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Более 10% запросов бронирования обрабатываются дольше 0,5 с"
+              description: "Доля медленных запросов к POST /send-form/ за 2 минуты: {{ $value | humanizePercentage }} (порог 10%, SLO задержки: 95% быстрее 0,5 с)."
+
+          - alert: BookingFailuresHigh
+            expr: |
+              sum(rate(reservations_rejected_total{reason="create_failed"}[5m]))
+                /
+              (
+                sum(rate(reservations_created_total[5m]))
+                + sum(rate(reservations_rejected_total{reason="create_failed"}[5m]))
+              ) > 0.5
+            for: 3m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Больше половины заявок не находят свободный стол"
+              description: "Доля отказов «нет свободных столов» за 5 минут: {{ $value | humanizePercentage }} (порог 50%). Рестораны заполнены или идёт аномальный трафик."
+
+      - name: restaurants-availability
+        rules:
+          - alert: ApiProbeFailing
+            expr: probe_success{target="api"} == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Путь пользователя недоступен (проба {{ $labels.target }})"
+              description: "Проба http://frontend/api/health не проходит уже минуту: nginx, backend или БД не отвечают."
+
+          - alert: PostgresDown
+            expr: min(pg_up) == 0 or absent(pg_up)
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: "PostgreSQL недоступен"
+              description: "postgres-exporter не видит базу или метрик pg_up нет больше минуты (под db не работает)."
+
+      - name: restaurants-runtime
+        rules:
+          - alert: BackendCPUHigh
+            expr: rate(process_cpu_seconds_total{pod=~"backend.*"}[2m]) > 0.8
+            for: 3m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Backend {{ $labels.pod }} упирается в процессор"
+              description: "Процесс занимает {{ $value | humanize }} ядра в течение 3 минут. Python-процесс однопоточен для CPU, близко к 1 ядру значит насыщение."
+
+          - alert: BackendMemoryHigh
+            expr: process_resident_memory_bytes{pod=~"backend.*"} > 300 * 1024 * 1024
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Backend {{ $labels.pod }} использует много памяти"
+              description: "RSS процесса {{ $value | humanize1024 }}B дольше 5 минут (порог 300 МиБ). Возможна утечка памяти."
