@@ -61,8 +61,8 @@ spec:
           env:
             - name: POSTGRES_DB
               valueFrom:
-                secretKeyRef:
-                  name: db-secrets
+                configMapKeyRef:
+                  name: db-configmap
                   key: POSTGRES_DB
             - name: DATA_SOURCE_USER
               valueFrom:

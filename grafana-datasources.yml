@@ -5,3 +5,8 @@ datasources:
     access: proxy
     url: http://logs:9428
     isDefault: true
+  - name: VictoriaMetrics
+      type: prometheus
+      access: proxy
+      url: http://vmsingle-victoria-metrics-single-server.default.svc.cluster.local:8428
+      isDefault: false
